@@ -5,7 +5,9 @@ library(tidyverse)
 library(tidymodels) # for the fit() function
 library(plotly)
 
-basepath = "C:/Users/kdh10kg/Documents/github/darkspots_shiny/prep/"
+# basepath = "C:/Users/kdh10kg/Documents/github/darkspots_shiny/prep/"
+basepath = "C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/"
+
 
 
 # Add descriptions and discoveries from Daniele
@@ -23,7 +25,7 @@ discoveries$time_diff = 0
 z = as.numeric(discoveries[1,(2:(ncol(discoveries) - 3))])
 start_year = 2022-(ncol(discoveries)-3-1-1)
 years = start_year:2022
-par(mfrow=c(5,1))
+par(mfrow=c(5,1), mar=c(4,4,1,1))
 for (roooow in 1:nrow(discoveries)){
 
 
@@ -219,7 +221,8 @@ for (roooow in 1:nrow(descriptions)){
 
 
 
-load("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/app_data.RData")
+# load("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/app_data.RData")
+load(paste0(basepath, "app_data.RData"))
 
 # save(tdwg3, file = paste0("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/app_data.RData"))
 # # write.csv(tdwg3@data, paste0(basepath, "variables_table.csv"))
@@ -302,8 +305,33 @@ autoplot(sdg.pca, data = subset,
 )+
   # geom_point(alpha=0.05, size=10,)+
   theme_bw() +
-  scale_color_gradient2(midpoint=1999, low="yellow", mid="purple",
+  scale_color_gradient2(midpoint=1930, low="yellow", mid="purple",
                         high="black", space ="Lab" )
+
+autoplot(sdg.pca, data = subset,
+         colour = "blue",#'discoveries_max_year', #  "discoveries_time_diff",  #'Income.Group', # num_instit, discoveries, descriptions, spp_left, tot_exp_spp_wcvp, left_spp_wcvp
+         loadings = TRUE,
+         loadings.label = TRUE,
+         loadings.size =5,
+         # loadings.colour = 'black',
+         label = TRUE,#"Country",
+         label.colour="black",
+         label.alpha=0.3,
+         label.position=position_jitter(width=0.012,height=0.012),
+         # shape= FALSE,
+         shape=16,
+         alpha=0.7,
+         size=2,
+         label.size = 4,
+         lwd=4
+)+
+  # position_jitter(width = NULL, height = NULL, seed = NA) +
+  # geom_jitter()+
+  # geom_point(alpha=0.05, size=10,)+
+  theme_bw()# +
+  # scale_color_gradient2(midpoint=1930, low="yellow", mid="purple",
+                        # high="black", space ="Lab" )
+
 
 autoplot(sdg.pca, data = subset,
          x = 1,    # PC2
@@ -323,7 +351,7 @@ autoplot(sdg.pca, data = subset,
 )+
   # geom_point(alpha=0.05, size=10,)+
   theme_bw() +
-  scale_color_gradient2(midpoint=30, low="black", mid="purple",
+  scale_color_gradient2(midpoint=100, low="black", mid="purple",
                         high="yellow", space ="Lab" )
 
 
@@ -345,7 +373,7 @@ autoplot(sdg.pca, data = subset,
 )+
   # geom_point(alpha=0.05, size=10,)+
   theme_bw() +
-  scale_color_gradient2(midpoint=30, low="black", mid="purple",
+  scale_color_gradient2(midpoint=100, low="black", mid="purple",
                         high="yellow", space ="Lab" )
 
 
@@ -353,7 +381,7 @@ plotly::plot_ly(data = tdwg3@data[rows,], x = ~PC1, y = ~PC2,
         type="scatter",mode = "markers",
         text = ~paste("TDWG: ", LEVEL3_COD),
         color = ~discoveries_time_diff,
-        marker = list(size=~discoveries_time_diff*0.15, opacity = 0.5))
+        marker = list(size=~discoveries_time_diff*0.2, sopacity = 0.5))#
 
 
 plotly::plot_ly(data = tdwg3@data[rows,], x = ~PC1, y = ~PC2,
@@ -810,18 +838,18 @@ ggscatter(tdwg3@data[rows,], x = "SR_shortfalls", y = "descriptions_y30_diff",
 #----------------------------------------------------------------------------
 #####Linnean "SR_unknown"
 #----------------------------------------------------------------------------
-tdwg3@data$SR_unknown_yearly_log = log2(tdwg3@data$SR_unknown/20)
+tdwg3@data$SR_unknown_norm_yearly_log = log2(tdwg3@data$SR_unknown_norm/20)
 tdwg3@data$discoveries_y2010_log = log2(tdwg3@data$discoveries_y2010)
 
 
-ggscatter(tdwg3@data[rows,], x = "SR_unknown_yearly_log", y = "discoveries_y2010_log",
+ggscatter(tdwg3@data[rows,], x = "SR_unknown_norm_yearly_log", y = "discoveries_y2010_log",
           add = "reg.line", conf.int = TRUE,
           # yscale = "log2",
           # xscale = "log2",
           cor.coef = TRUE, cor.method = "kendall",#cor.coef.name="tau",
           xlab = "# species left to be discovered (log)",
           ylab = "discovery rate across 2010s (log)", main="(a) Linnean shortfall")
-
+# ggsave(paste0(basepath, "linnean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
 
 # ggscatter(tdwg3@data[rows,], x = "SR_unknown_yearly", y = "discoveries_y1980",
 #           add = "reg.line", conf.int = TRUE,
@@ -853,16 +881,18 @@ ggscatter(tdwg3@data[rows,], x = "SR_unknown_yearly_log", y = "discoveries_y2010
 #           add = "reg.line", conf.int = TRUE,
 #           cor.coef = TRUE, cor.method = "pearson",
 #           xlab = "SR_nogeolocalisation", ylab = "discoveries_y2010")
-tdwg3@data$SR_nogeolocalisation_yearly_log =log2(tdwg3@data$SR_nogeolocalisation/20)
+tdwg3@data$SR_nogeoloc_norm_yearly_log =log2(tdwg3@data$SR_nogeoloc_norm/20)
 tdwg3@data$descriptions_y2010_log = log2(tdwg3@data$descriptions_y2010)
 
-ggscatter(tdwg3@data[rows,], x = "SR_nogeolocalisation_yearly_log", y = "descriptions_y2010_log",
+ggscatter(tdwg3@data[rows,], x = "SR_nogeoloc_norm_yearly_log", y = "descriptions_y2010_log",
           add = "reg.line", conf.int = TRUE,
           # yscale = "log2",
           # xscale = "log2",
           cor.coef = TRUE, cor.method = "kendall",
           xlab = "# species left to be geolocated (log)",
           ylab = "geolocation rate across 2010s (log)", main="(b) Wallacean shortfall")
+# ggsave(paste0(basepath, "wallacean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
+
 
 # ggscatter(tdwg3@data[rows,], x = "SR_nogeolocalisation_yearly", y = "descriptions_y1980",
 #           add = "reg.line", conf.int = TRUE,
@@ -885,8 +915,8 @@ ggscatter(tdwg3@data[rows,], x = "SR_nogeolocalisation_yearly_log", y = "descrip
 ###### peak discovery/description year against PCs
 #----------------------------------------------------------------------------
 
-tdwg3@data$SR_nogeolocalisation_yearly_log =log2(tdwg3@data$SR_nogeolocalisation/20)
-tdwg3@data$descriptions_y2010_log = log2(tdwg3@data$descriptions_y2010)
+# tdwg3@data$SR_nogeolocalisation_yearly_log =log2(tdwg3@data$SR_nogeolocalisation/20)
+# tdwg3@data$descriptions_y2010_log = log2(tdwg3@data$descriptions_y2010)
 
 
 ggscatter(tdwg3@data[rows,], x = "PC1", y = "discoveries_max_year",

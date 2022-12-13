@@ -13,6 +13,11 @@ library(cowplot)
 library(sf)
 require(tmap)
 
+
+# basepath = "C:/Users/kdh10kg/Documents/github/darkspots_shiny/prep/"
+basepath = "C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/"
+
+
 ##############################################################################
 ##############################################################################
 ### FUNCTIONS
@@ -62,7 +67,7 @@ colmat<-function(nquantiles=4, upperleft=rgb(0,150,235, maxColorValue=255),
 
 
 # load("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/app_data.RData")
-darkspots <- st_read("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/model_outputs.shp")
+darkspots <- st_read(paste0(basepath, "/model_outputs.shp"))
 
 
 
@@ -96,10 +101,10 @@ darkspots.prj$drk_unprotect = darkspots.prj$benefit_4
 darkspots.prj$drk = darkspots.prj$benefit_1
 darkspots.prj$income = normalise(darkspots.prj$PC1)
 darkspots.prj$unprotect = normalise(darkspots.prj$PC2)
-darkspots.prj$linnean_yrs = - normalise(darkspots.prj$discoveri1)
-darkspots.prj$wallacean_yrs = - normalise(darkspots.prj$descripti1)
-darkspots.prj$linnean = darkspots.prj$SR_unknow0 # SR_unknown_norm
-darkspots.prj$wallacean = darkspots.prj$SR_nogeol1 # SR_nogeoloc_norm #
+darkspots.prj$linnean_yrs = - normalise(darkspots.prj$dscvrs_t_)
+darkspots.prj$wallacean_yrs = - normalise(darkspots.prj$dscrptns_t)
+darkspots.prj$linnean = darkspots.prj$SR_nk_ # SR_unknown_norm
+darkspots.prj$wallacean = darkspots.prj$SR_ng_ # SR_nogeoloc_norm #
 
 
 
@@ -161,6 +166,7 @@ finalPlot <- ggdraw() +
 
 
 finalPlot
+# ggsave(paste0(basepath, "time2event_darkspot_map.pdf"), width = 30, height = 12, units = "cm")
 
 
 
@@ -210,7 +216,6 @@ map <- ggplot() +
 
 
 
-
 legend <- bi_legend(pal = custom_pal4,#"GrPink",
                     dim = dim,
                     xlab = "     Lower income",
@@ -223,6 +228,7 @@ finalPlot <- ggdraw() +
 
 
 finalPlot
+# ggsave(paste0(basepath, "prioritisation_map.pdf"), width = 30, height = 12, units = "cm")
 
 
 
@@ -252,12 +258,12 @@ data = darkspots.prj
 
 # create map
 map <- ggplot() +
-  geom_sf(data = data, mapping = aes(fill = discoveri3),
-          color = aes(fill = discoveri3),#NA,
+  geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
+          color = aes(fill = dscvrs_m_1),#NA,
           size = 0.4, show.legend = FALSE) +
   geom_sf() +  #+
   geom_point( data= data,
-              aes(color =  discoveri3,  #fill = bi_class,
+              aes(color =  dscvrs_m_1,  #fill = bi_class,
                   geometry = geometry),
               size = 2,
               stat = "sf_coordinates"
@@ -275,12 +281,12 @@ map <- ggplot() +
 map
 
 
-legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill = discoveri3),
-                                      color = aes(fill = discoveri3),#NA,
+legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
+                                      color = aes(fill = dscvrs_m_1),#NA,
                                       size = 0.4, show.legend = TRUE) +
                                 geom_sf() +  #+
                                 geom_point( data= data,
-                                            aes(color =  discoveri3,  #fill = bi_class,
+                                            aes(color =  dscvrs_m_1,  #fill = bi_class,
                                                 geometry = geometry),
                                             size = 2,
                                             stat = "sf_coordinates"
@@ -312,6 +318,7 @@ finalPlot <- ggdraw() +
 
 finalPlot
 
+# ggsave(paste0(basepath, "skyline_linnean_map.pdf"), width = 30, height = 12, units = "cm")
 
 
 #

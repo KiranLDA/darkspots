@@ -9,39 +9,75 @@ data =  tdwg3@data
 
 normalise <- function(x){(x-min(x,na.rm=T))/(max(x,na.rm=T)-min(x,na.rm=T))}
 
+# 1) Aucun "cout"
+# 2) Pauvrete
+# 3) Richesse
+# 4) Pas de protection
+# 5) Protection
+# 6) Pauvrete et pas de protection
+# 7) Pauvrete et protection
+# 8) Richesse et pas de protection
+# 9) Richesse et protection
+
 
 # Prioritise areas with the most species left to discover
-#normalise(table$`SR_shortfalls`)
-data$benefit_1 = normalise(data$SR_shortfalls)#(1-normalise(data$SR_shortfalls))
-# data$benefit_1[is.na(data$benefit_1)]=0
+data$benefit_1 = data$shortfalls_norm_index#(1-normalise(data$SR_shortfalls))
+data$benefit_1 = normalise(data$benefit_1)
 data$Rank_scenatio_1 <- rank(-data$benefit_1, na.last = "keep", ties.method = "first")
 
-
 # prioritise areas with the most species in poor places to discover
-data$benefit_2 = normalise(data$SR_shortfalls) + normalise(data$PC1)#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
-# data$benefit_2[is.na(data$benefit_2)]=0
+data$benefit_2 = data$shortfalls_norm_index + normalise(data$PC1)#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_2 = normalise(data$benefit_2)
 data$Rank_scenatio_2 <- rank(-data$benefit_2, na.last = "keep", ties.method = "first")
 
-
 # prioritise areas with the most species in rich places to discover
-data$benefit_3 = normalise(data$SR_shortfalls) + (1-(normalise(data$PC1)))#(1-normalise(data$SR_shortfalls)) + ((normalise(data$PC1)))
-# data$benefit_3[is.na(data$benefit_3)]=0
+data$benefit_3 =data$shortfalls_norm_index + (1-(normalise(data$PC1)))#(1-normalise(data$SR_shortfalls)) + ((normalise(data$PC1)))
+data$benefit_3 = normalise(data$benefit_3)
 data$Rank_scenatio_3 <- rank(-data$benefit_3, na.last = "keep", ties.method = "first")
 
 #Prioritise areas with most species and biggest potential for biodiversity loss PC2
-data$benefit_4 = normalise(data$PC2) + (normalise(data$SR_shortfalls))#(1-(normalise(data$PC2))) + (1-normalise(data$SR_shortfalls))
-# data$benefit_4[is.na(data$benefit_4)]=0
+data$benefit_4 = normalise(data$PC2) + (data$shortfalls_norm_index)#(1-(normalise(data$PC2))) + (1-normalise(data$SR_shortfalls))
+data$benefit_4 = normalise(data$benefit_4)
 data$Rank_scenatio_4 <- rank(-data$benefit_4, na.last = "keep", ties.method = "first")
 
-#Prioritise areas with most species, poor, and biggest potential for biodiversity loss PC2
-data$benefit_5 = (normalise(data$SR_shortfalls)) + (normalise(data$PC2)) +  ((normalise(data$PC1)))#(1-(normalise(data$PC2))) + (1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
-# data$benefit_5[is.na(data$benefit_5)]=0
+
+#Prioritise areas with most species and smallest potential for biodiversity loss PC2
+data$benefit_5 = (1-normalise(data$PC2)) + (data$shortfalls_norm_index)#(1-(normalise(data$PC2))) + (1-normalise(data$SR_shortfalls))
+data$benefit_5 = normalise(data$benefit_5)
 data$Rank_scenatio_5 <- rank(-data$benefit_5, na.last = "keep", ties.method = "first")
+
+# prioritise areas with the most species in poor places and biggest potential for biodiversity loss PC2
+data$benefit_6 = data$shortfalls_norm_index + normalise(data$PC1)+  (normalise(data$PC2))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_6 = normalise(data$benefit_6)
+data$Rank_scenatio_6 <- rank(-data$benefit_6, na.last = "keep", ties.method = "first")
+
+# prioritise areas with the most species in poor places to discover with protection
+data$benefit_7 = data$shortfalls_norm_index + normalise(data$PC1)+  (1-normalise(data$PC2))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_7 = normalise(data$benefit_7)
+data$Rank_scenatio_7 <- rank(-data$benefit_7, na.last = "keep", ties.method = "first")
+
+# prioritise areas with the most species in rich places and biggest potential for biodiversity loss PC2
+data$benefit_8 = data$shortfalls_norm_index + (1-normalise(data$PC1))+  (normalise(data$PC2))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_8 = normalise(data$benefit_8)
+data$Rank_scenatio_8 <- rank(-data$benefit_8, na.last = "keep", ties.method = "first")
+
+# prioritise areas with the most species in rich places to discover with protection
+data$benefit_9 = data$shortfalls_norm_index + (1-normalise(data$PC1)) +  (1-normalise(data$PC2))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_9 = normalise(data$benefit_9)
+data$Rank_scenatio_9 <- rank(-data$benefit_9, na.last = "keep", ties.method = "first")
+
+
 
 data$rank_diff_1_2 = data$Rank_scenatio_1 - data$Rank_scenatio_2 #-
 data$rank_diff_1_3 = data$Rank_scenatio_1 - data$Rank_scenatio_3 #- data$Rank_scenatio_1
 data$rank_diff_1_4 = data$Rank_scenatio_1 - data$Rank_scenatio_4 #- data$Rank_scenatio_1
 data$rank_diff_1_5 = data$Rank_scenatio_1 - data$Rank_scenatio_5 #- data$Rank_scenatio_1
+data$rank_diff_1_6 = data$Rank_scenatio_1 - data$Rank_scenatio_6 #- data$Rank_scenatio_1
+data$rank_diff_1_7 = data$Rank_scenatio_1 - data$Rank_scenatio_7 #- data$Rank_scenatio_1
+data$rank_diff_1_8 = data$Rank_scenatio_1 - data$Rank_scenatio_8 #- data$Rank_scenatio_1
+data$rank_diff_1_9 = data$Rank_scenatio_1 - data$Rank_scenatio_9 #- data$Rank_scenatio_1
+
+
 
 data$PC1_normalised = normalise(data$PC1)
 data$PC2_normalised = normalise(data$PC2)
@@ -137,6 +173,7 @@ tdwg3@data = data
 
 #Save PCA and Ranks
 save(tdwg3, file = paste0("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/app_data.RData"))
+save(tdwg3, file = paste0(basepath, "app_data.RData"))
 write.csv(tdwg3@data, paste0(basepath, "variables_table.csv"))
 
 # rgdal::writeOGR(obj=tdwg3,
@@ -147,3 +184,5 @@ write.csv(tdwg3@data, paste0(basepath, "variables_table.csv"))
 
 library(raster)
 shapefile(tdwg3, filename='C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/model_outputs.shp', overwrite=TRUE)
+shapefile(tdwg3, filename=paste0(basepath, "/model_outputs.shp"), overwrite=TRUE)
+

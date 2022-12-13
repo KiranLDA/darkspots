@@ -1,10 +1,12 @@
-load("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/app_data.RData")
+basepath = "C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/"
+
+load(paste0(basepath, "app_data.RData"))
 
 library(dplyr)
 # library(plyr)
 # detach("package:plyr", unload=TRUE)
 
-
+RANK=5
 
 ###########################################################
 #### Past Discoveries
@@ -24,7 +26,7 @@ colnames(data) = c("individual","group", "year","value")
 tdwg1_names = data.frame(LEVEL1_COD = seq(1,9,1),
                          LEVEL1_NAM = c("Europe",
                                         "Africa",
-                                        "Asia-Temperate",
+                                        "Asia-\nTemperate",
                                         "Asia-Tropical",
                                         "Australasia",
                                         "Pacific",
@@ -57,7 +59,7 @@ data = data %>% dplyr::arrange(group) %>%
 # data=data %>% dplyr::group_by(group) %>%
 #   dplyr::arrange(value) %>%
 #   dplyr::mutate(rank = rank(-value))
-data = data %>% dplyr::filter(rank <= 10)
+data = data %>% dplyr::filter(rank <= RANK)
 # data = data[, c("individual", "group", "value")]
 
 data$id=seq(1, nrow(data))
@@ -103,9 +105,9 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=year)) +       # Note that i
 
   ) +
   geom_hline(yintercept = seq(0,0.15,0.05), color = "gray90") +
-  geom_vline(xintercept = seq(1,81,10)-0.5, color = "black") +
+  geom_vline(xintercept = seq(1,dim(data)[1],RANK)-0.5, color = "black") +
   coord_polar() +
-  geom_text(data = data.frame(x1 = seq(5,81, 10),
+  geom_text(data = data.frame(x1 = seq((RANK/2),dim(data)[1],RANK),
                               y1 = rep(0.2, 8),
                               label = tdwg1_names$LEVEL1_NAM[1:8]),
             aes(x=x1, y=y1, label = label),
@@ -122,6 +124,8 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=year)) +       # Note that i
             angle= label_data$angle, inherit.aes = FALSE )
 
 p
+# ggsave(paste0(basepath, "skyline_roseplot.pdf"), width = 20, height = 20, units = "cm")
+
 
 
 
@@ -170,7 +174,7 @@ colnames(data) = c("individual","group", "value", "color")
 tdwg1_names = data.frame(LEVEL1_COD = seq(1,9,1),
                          LEVEL1_NAM = c("Europe",
                                         "Africa",
-                                        "Asia-Temperate",
+                                        "Asia-\nTemperate",
                                         "Asia-Tropical",
                                         "Australasia",
                                         "Pacific",
@@ -203,7 +207,7 @@ data = data %>% dplyr::arrange(group) %>%
 # data=data %>% dplyr::group_by(group) %>%
 #   dplyr::arrange(value) %>%
 #   dplyr::mutate(rank = rank(-value))
-data = data %>% dplyr::filter(rank <= 10)
+data = data %>% dplyr::filter(rank <= RANK)
 # data = data[, c("individual", "group", "value")]
 
 data$id=seq(1, nrow(data))
@@ -250,9 +254,9 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=color)) +       # Note that 
 
   ) +
   geom_hline(yintercept = seq(0,2,0.5), color = "gray90") +
-  geom_vline(xintercept = seq(1,81,10)-0.5, color = "black") +
+  geom_vline(xintercept = seq(1,dim(data)[1],RANK)-0.5, color = "black") +
   coord_polar() +
-  geom_text(data = data.frame(x1 = seq(5,81, 10),
+  geom_text(data = data.frame(x1 = seq((RANK/2),dim(data)[1],RANK),
                               y1 = rep(4, 8),
                               label = tdwg1_names$LEVEL1_NAM[1:8]),
             aes(x=x1, y=y1, label = label),
@@ -269,6 +273,8 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=color)) +       # Note that 
             angle= label_data$angle, inherit.aes = FALSE )
 
 p
+# ggsave(paste0(basepath, "time2event_darkspot_roseplot.pdf"), width = 20, height = 20, units = "cm")
+
 
 
 
@@ -322,7 +328,7 @@ colnames(data) = c("individual","group", "value", "color")
 tdwg1_names = data.frame(LEVEL1_COD = seq(1,9,1),
                          LEVEL1_NAM = c("Europe",
                                         "Africa",
-                                        "Asia-Temperate",
+                                        "Asia-\nTemperate",
                                         "Asia-Tropical",
                                         "Australasia",
                                         "Pacific",
@@ -355,7 +361,7 @@ data = data %>% dplyr::arrange(group) %>%
 # data=data %>% dplyr::group_by(group) %>%
 #   dplyr::arrange(value) %>%
 #   dplyr::mutate(rank = rank(-value))
-data = data %>% dplyr::filter(rank <= 10)
+data = data %>% dplyr::filter(rank <= RANK)
 # data = data[, c("individual", "group", "value")]
 
 data$id=seq(1, nrow(data))
@@ -402,9 +408,9 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=color)) +       # Note that 
 
   ) +
   geom_hline(yintercept = seq(0,2,0.5), color = "gray90") +
-  geom_vline(xintercept = seq(1,81,10)-0.5, color = "black") +
+  geom_vline(xintercept = seq(1,dim(data)[1],RANK)-0.5, color = "black") +
   coord_polar() +
-  geom_text(data = data.frame(x1 = seq(5,81, 10),
+  geom_text(data = data.frame(x1 = seq((RANK/2),dim(data)[1],RANK),
                               y1 = rep(5, 8),
                               label = tdwg1_names$LEVEL1_NAM[1:8]),
             aes(x=x1, y=y1, label = label),
@@ -421,4 +427,5 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=color)) +       # Note that 
             angle= label_data$angle, inherit.aes = FALSE )
 
 p
+# ggsave(paste0(basepath, "prioritisation_roseplot.pdf"), width = 20, height = 20, units = "cm")
 
