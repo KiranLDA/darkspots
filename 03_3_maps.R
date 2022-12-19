@@ -97,8 +97,8 @@ darkspots.prj = st_transform(st_crop(m, st_bbox(c(xmin = -180,
 
 
 
-darkspots.prj$drk_unprotect = darkspots.prj$benefit_4
-darkspots.prj$drk = darkspots.prj$benefit_1
+darkspots.prj$drk_unprotect = darkspots.prj$bnf_4
+darkspots.prj$drk = darkspots.prj$bnf_1
 darkspots.prj$income = normalise(darkspots.prj$PC1)
 darkspots.prj$unprotect = normalise(darkspots.prj$PC2)
 darkspots.prj$linnean_yrs = - normalise(darkspots.prj$dscvrs_t_)
@@ -108,6 +108,97 @@ darkspots.prj$wallacean = darkspots.prj$SR_ng_ # SR_nogeoloc_norm #
 
 
 
+
+
+#######################################
+##########################################################
+# dpeak discovery year
+#######################################
+
+#
+# dim=4
+# col.matrix<-colmat(nquantiles=dim,
+#                    upperleft=rgb(0,150,235, maxColorValue=255),
+#                    upperright= rgb(255,230,15, maxColorValue=255),
+#                    bottomleft="black",#"grey",
+#                    bottomright=rgb(130,0,80, maxColorValue=255)
+# )
+# custom_pal4 <- as.vector(rotate(rotate(col.matrix[2:(dim+1),2:(dim+1)])))
+# names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
+
+# data <- bi_class(darkspots.prj,y=drk, x=discoveri5,
+#                  style = "quantile", dim = dim)
+#
+
+data = darkspots.prj
+
+
+# create map
+map <- ggplot() +
+  geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
+          color = aes(fill = dscvrs_m_1),#NA,
+          size = 0.4, show.legend = FALSE) +
+  geom_sf() +  #+
+  geom_point( data= data,
+              aes(color =  dscvrs_m_1,  #fill = bi_class,
+                  geometry = geometry),
+              size = 2,
+              stat = "sf_coordinates"
+  ) +
+  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+  # scale_fill_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+  # scale_color_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+  guides(color = "none") +
+  bi_theme() +
+  theme(axis.title.y=element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.text.x=element_blank())
+map
+
+
+legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
+                                                color = aes(fill = dscvrs_m_1),#NA,
+                                                size = 0.4, show.legend = TRUE) +
+                                geom_sf() +  #+
+                                geom_point( data= data,
+                                            aes(color =  dscvrs_m_1,  #fill = bi_class,
+                                                geometry = geometry),
+                                            size = 2,
+                                            stat = "sf_coordinates"
+                                ) +
+                                scale_fill_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+                                scale_color_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+                                # scale_fill_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+                                # scale_color_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+                                guides(color = "none",
+                                       fill=guide_legend(title="Peak discovery year"),override.aes = list(size = 0.5)) +
+                                bi_theme() +
+                                theme(
+                                  axis.title.y=element_blank(),
+                                  axis.title.x=element_blank(),
+                                  axis.text.y=element_blank(),
+                                  axis.text.x=element_blank(),
+                                  legend.text=element_text(size=8),
+                                  legend.title=element_text(size=10))
+)
+
+
+
+
+# combine map with legend
+finalPlot <- ggdraw() +
+  draw_plot(map, 0, 0, 1, 1) +
+  draw_plot(legend, 0.8, .7, 0.24, 0.24)
+
+
+finalPlot
+
+ggsave(paste0(basepath, "skyline_linnean_map.pdf"), width = 30, height = 12, units = "cm")
+
+
+#
 #############################################
 # Linnean vs wallacean
 #############################################
@@ -166,7 +257,7 @@ finalPlot <- ggdraw() +
 
 
 finalPlot
-# ggsave(paste0(basepath, "time2event_darkspot_map.pdf"), width = 30, height = 12, units = "cm")
+ggsave(paste0(basepath, "time2event_darkspot_map.pdf"), width = 30, height = 12, units = "cm")
 
 
 
@@ -177,10 +268,10 @@ finalPlot
 
 dim=4
 col.matrix<-colmat(nquantiles=dim,
-                   upperleft="#944c3b",#"#660000",#"darkgoldenrod4",#rgb(0,150,235, maxColorValue=255),
-                   upperright= "#f3e6b3",#"#FF9933",# BOTTOM LEFT   #rgb(255,230,15, maxColorValue=255),
-                   bottomleft="#655e8a",# TOP RIGHT     #"brown2",#"black",#"grey",
-                   bottomright= "#b4ace9"#"#8009a9" #"#9966FF"#"brown1"#rgb(130,0,80, maxColorValue=255)
+                   upperleft="#f99443",#"#944c3b",#"#660000",#"darkgoldenrod4",#rgb(0,150,235, maxColorValue=255),
+                   upperright= "#fffde7",#"#f3e6b3",#"#FF9933",# BOTTOM LEFT   #rgb(255,230,15, maxColorValue=255),
+                   bottomleft="#6a1b9a",#"#655e8a",# TOP RIGHT     #"brown2",#"black",#"grey",
+                   bottomright= "#f3e5f5"#"#b4ace9"#"#8009a9" #"#9966FF"#"brown1"#rgb(130,0,80, maxColorValue=255)
 )
 custom_pal4 <- as.vector(rotate(rotate(col.matrix[2:(dim+1),2:(dim+1)])))
 names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
@@ -188,7 +279,7 @@ names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 
 
 
-data <- bi_class(darkspots.prj,y=drk_unprotect, x=income,
+data <- bi_class(darkspots.prj, y=drk_unprotect, x=income,
                  style = "quantile", dim = dim)
 
 
@@ -228,88 +319,60 @@ finalPlot <- ggdraw() +
 
 
 finalPlot
-# ggsave(paste0(basepath, "prioritisation_map.pdf"), width = 30, height = 12, units = "cm")
+ggsave(paste0(basepath, "prioritisation_map.pdf"), width = 30, height = 12, units = "cm")
+
+
+
+#############################################
+# Protection + darkspot vs income
+#############################################
+
+dim=4
+col.matrix<-colmat(nquantiles=dim,
+                   upperleft="#f99443",#"#944c3b",#"#660000",#"darkgoldenrod4",#rgb(0,150,235, maxColorValue=255),
+                   upperright= "#fffde7",#"#f3e6b3",#"#FF9933",# BOTTOM LEFT   #rgb(255,230,15, maxColorValue=255),
+                   bottomleft="#6a1b9a",#"#655e8a",# TOP RIGHT     #"brown2",#"black",#"grey",
+                   bottomright= "#f3e5f5"#"#b4ace9"#"#8009a9" #"#9966FF"#"brown1"#rgb(130,0,80, maxColorValue=255)
+)
+custom_pal4 <- as.vector(rotate(rotate(col.matrix[2:(dim+1),2:(dim+1)])))
+names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 
 
 
 
-#######################################
-##########################################################
-# dpeak discovery year
-#######################################
+data <- bi_class(darkspots.prj,y=unprotect, x=income,
+                 style = "quantile", dim = dim)
 
-#
-# dim=4
-# col.matrix<-colmat(nquantiles=dim,
-#                    upperleft=rgb(0,150,235, maxColorValue=255),
-#                    upperright= rgb(255,230,15, maxColorValue=255),
-#                    bottomleft="black",#"grey",
-#                    bottomright=rgb(130,0,80, maxColorValue=255)
-# )
-# custom_pal4 <- as.vector(rotate(rotate(col.matrix[2:(dim+1),2:(dim+1)])))
-# names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
-
-# data <- bi_class(darkspots.prj,y=drk, x=discoveri5,
-#                  style = "quantile", dim = dim)
-#
-
-data = darkspots.prj
 
 
 # create map
 map <- ggplot() +
-  geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
-          color = aes(fill = dscvrs_m_1),#NA,
+  geom_sf(data = data, mapping = aes(fill = bi_class),
+          color = aes(fill = bi_class),#NA,
           size = 0.4, show.legend = FALSE) +
   geom_sf() +  #+
   geom_point( data= data,
-              aes(color =  dscvrs_m_1,  #fill = bi_class,
+              aes(color =  bi_class,  #fill = bi_class,
                   geometry = geometry),
               size = 2,
               stat = "sf_coordinates"
   ) +
-  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
-  scale_color_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
-  # scale_fill_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
-  # scale_color_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+  bi_scale_fill(pal = custom_pal4, dim=dim)+#, flip_axes = TRUE, rotate_pal = TRUE) + #"GrPink", dim = 3) +#, rotate_pal = TRUE) +
+  bi_scale_color(pal = custom_pal4, dim=dim)+#,flip_axes = TRUE, rotate_pal = TRUE) +
   guides(color = "none") +
   bi_theme() +
   theme(axis.title.y=element_blank(),
         axis.title.x=element_blank(),
         axis.text.y=element_blank(),
         axis.text.x=element_blank())
-map
-
-
-legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
-                                      color = aes(fill = dscvrs_m_1),#NA,
-                                      size = 0.4, show.legend = TRUE) +
-                                geom_sf() +  #+
-                                geom_point( data= data,
-                                            aes(color =  dscvrs_m_1,  #fill = bi_class,
-                                                geometry = geometry),
-                                            size = 2,
-                                            stat = "sf_coordinates"
-                                ) +
-                                scale_fill_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
-                                scale_color_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
-                                # scale_fill_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
-                                # scale_color_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
-                                guides(color = "none",
-                                       fill=guide_legend(title="Peak discovery year"),override.aes = list(size = 0.5)) +
-                                bi_theme() +
-                                theme(
-                                  axis.title.y=element_blank(),
-                                      axis.title.x=element_blank(),
-                                      axis.text.y=element_blank(),
-                                      axis.text.x=element_blank(),
-                                  legend.text=element_text(size=8),
-                                  legend.title=element_text(size=10))
-                              )
 
 
 
-
+legend <- bi_legend(pal = custom_pal4,#"GrPink",
+                    dim = dim,
+                    xlab = "        PC1: Lower income",
+                    ylab = "PC2: Less Protection",
+                    size = 8)
 # combine map with legend
 finalPlot <- ggdraw() +
   draw_plot(map, 0, 0, 1, 1) +
@@ -317,12 +380,9 @@ finalPlot <- ggdraw() +
 
 
 finalPlot
+ggsave(paste0(basepath,"PC1_PC2_map.pdf"), width = 30, height = 12, units = "cm")
 
-# ggsave(paste0(basepath, "skyline_linnean_map.pdf"), width = 30, height = 12, units = "cm")
 
-
-#
-#
 # #######################################
 # ##########################################################
 # # darkspots

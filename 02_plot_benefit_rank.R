@@ -36,33 +36,33 @@ data$benefit_3 = normalise(data$benefit_3)
 data$Rank_scenatio_3 <- rank(-data$benefit_3, na.last = "keep", ties.method = "first")
 
 #Prioritise areas with most species and biggest potential for biodiversity loss PC2
-data$benefit_4 = normalise(data$PC2) + (data$shortfalls_norm_index)#(1-(normalise(data$PC2))) + (1-normalise(data$SR_shortfalls))
+data$benefit_4 = (data$shortfalls_norm_index) + normalise(data$PC2) #(1-(normalise(data$PC2))) + (1-normalise(data$SR_shortfalls))
 data$benefit_4 = normalise(data$benefit_4)
 data$Rank_scenatio_4 <- rank(-data$benefit_4, na.last = "keep", ties.method = "first")
 
 
 #Prioritise areas with most species and smallest potential for biodiversity loss PC2
-data$benefit_5 = (1-normalise(data$PC2)) + (data$shortfalls_norm_index)#(1-(normalise(data$PC2))) + (1-normalise(data$SR_shortfalls))
+data$benefit_5 =  (data$shortfalls_norm_index) + (1-normalise(data$PC2)) #(1-(normalise(data$PC2))) + (1-normalise(data$SR_shortfalls))
 data$benefit_5 = normalise(data$benefit_5)
 data$Rank_scenatio_5 <- rank(-data$benefit_5, na.last = "keep", ties.method = "first")
 
 # prioritise areas with the most species in poor places and biggest potential for biodiversity loss PC2
-data$benefit_6 = data$shortfalls_norm_index + normalise(data$PC1)+  (normalise(data$PC2))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_6 = data$shortfalls_norm_index + normalise(normalise(data$PC1)+  (normalise(data$PC2)))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
 data$benefit_6 = normalise(data$benefit_6)
 data$Rank_scenatio_6 <- rank(-data$benefit_6, na.last = "keep", ties.method = "first")
 
 # prioritise areas with the most species in poor places to discover with protection
-data$benefit_7 = data$shortfalls_norm_index + normalise(data$PC1)+  (1-normalise(data$PC2))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_7 = data$shortfalls_norm_index + normalise(normalise(data$PC1)+  (1-normalise(data$PC2)))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
 data$benefit_7 = normalise(data$benefit_7)
 data$Rank_scenatio_7 <- rank(-data$benefit_7, na.last = "keep", ties.method = "first")
 
 # prioritise areas with the most species in rich places and biggest potential for biodiversity loss PC2
-data$benefit_8 = data$shortfalls_norm_index + (1-normalise(data$PC1))+  (normalise(data$PC2))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_8 = data$shortfalls_norm_index + normalise((1-normalise(data$PC1))+  (normalise(data$PC2)))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
 data$benefit_8 = normalise(data$benefit_8)
 data$Rank_scenatio_8 <- rank(-data$benefit_8, na.last = "keep", ties.method = "first")
 
 # prioritise areas with the most species in rich places to discover with protection
-data$benefit_9 = data$shortfalls_norm_index + (1-normalise(data$PC1)) +  (1-normalise(data$PC2))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
+data$benefit_9 = data$shortfalls_norm_index + normalise((1-normalise(data$PC1)) +  (1-normalise(data$PC2)))#(1-normalise(data$SR_shortfalls)) + (1-(normalise(data$PC1)))
 data$benefit_9 = normalise(data$benefit_9)
 data$Rank_scenatio_9 <- rank(-data$benefit_9, na.last = "keep", ties.method = "first")
 
@@ -85,77 +85,213 @@ data$PC3_normalised = normalise(data$PC3)
 
 
 #PLOT THE LOT
-
-t <- list(
-  family = "sans serif",
-  size = 12,
-  color = toRGB("grey50"))
-
-plot_ly(data = data, x = ~Rank_scenatio_2, y = ~Rank_scenatio_1,
-        text = ~LEVEL3_NAM,
-        color = ~rank_diff_1_2, size = 3) %>%
-  add_markers() %>%
-  layout(title = 'Prioritise lower income group regions') %>%
-  add_text(textfont = t, textposition = "top")
-
-
-plot_ly(data = data, x = ~Rank_scenatio_3, y = ~Rank_scenatio_1,
-        text = ~LEVEL3_NAM,
-        color = ~rank_diff_1_3, size = 3) %>%
-  add_markers() %>%
-  layout(title = 'Prioritise higher income group  regions') %>%
-  add_text(textfont = t, textposition = "top")
-
-
-plot_ly(data = data, x = ~Rank_scenatio_4, y = ~Rank_scenatio_1,
-        text = ~LEVEL3_NAM,
-        color = ~rank_diff_1_4, size = 3) %>%
-  add_markers() %>%
-  layout(title = 'Prioritise less protected regions') %>%
-  add_text(textfont = t, textposition = "top")
-
-
-plot_ly(data = data, x = ~Rank_scenatio_5, y = ~Rank_scenatio_1,
-        text = ~LEVEL3_NAM,
-        color = ~rank_diff_1_5, size = 3) %>%
-  add_markers() %>%
-  layout(title = 'Prioritise lower income regions with least protection') %>%
-  add_text(textfont = t, textposition = "top")
-
-
-
-
-tdwg3@data = data
-
-
-# tdwg3_PCA.df <- fortify(tdwg3_PCA, region = "DMA")
-# tdwg3_PCA.df <- rename(tdwg3_PCA.df, DMA = id)
 #
-# library(ggplot2)
-# ggplot(tdwg3_PCA, aes( x = long, y = lat, group =  rank_diff_1_2)) +
-#   geom_polygon(data = tdwg3_PCA, aes( x = long, y = lat, group =  rank_diff_1_2), color="white") +
-#   theme_void()
-
-
-
+# t <- list(
+#   family = "sans serif",
+#   size = 12,
+#   color = toRGB("grey50"))
 #
-# library(broom)
-# NHSBoards_tidy <- tidy(tdwg3_PCA)
-#
-# ggplot(NHSBoards_tidy, aes(x = long, y = lat, col =  Rank_scenatio_3, fill= Rank_scenatio_3)) +
-#   geom_polygon(color = "black", size = 0.1) +
-#   coord_equal() +
-#   theme_minimal()
+# plot_ly(data = data, x = ~Rank_scenatio_2, y = ~Rank_scenatio_1,
+#         text = ~LEVEL3_NAM,
+#         color = ~rank_diff_1_2, size = 3) %>%
+#   add_markers() %>%
+#   layout(title = 'Prioritise lower income group regions') %>%
+#   add_text(textfont = t, textposition = "top")
 #
 #
-# ggplot(NHSBoards_tidy, aes(x = long, y = lat, group =  group)) +
-#   geom_polygon(color = "black", size = 0.1) +
-#   coord_equal() +
-#   theme_minimal()
-
-
+# plot_ly(data = data, x = ~Rank_scenatio_3, y = ~Rank_scenatio_1,
+#         text = ~LEVEL3_NAM,
+#         color = ~rank_diff_1_3, size = 3) %>%
+#   add_markers() %>%
+#   layout(title = 'Prioritise higher income group  regions') %>%
+#   add_text(textfont = t, textposition = "top")
 #
 #
+# plot_ly(data = data, x = ~Rank_scenatio_4, y = ~Rank_scenatio_1,
+#         text = ~LEVEL3_NAM,
+#         color = ~rank_diff_1_4, size = 3) %>%
+#   add_markers() %>%
+#   layout(title = 'Prioritise less protected regions') %>%
+#   add_text(textfont = t, textposition = "top")
+#
+#
+# plot_ly(data = data, x = ~Rank_scenatio_5, y = ~Rank_scenatio_1,
+#         text = ~LEVEL3_NAM,
+#         color = ~rank_diff_1_5, size = 3) %>%
+#   add_markers() %>%
+#   layout(title = 'Prioritise lower income regions with least protection') %>%
+#   add_text(textfont = t, textposition = "top")
+
+
+s2 <- ggplot(data = data, aes(x = Rank_scenatio_2, y = Rank_scenatio_1,
+        label = LEVEL3_COD,#LEVEL3_NAM,
+        color = rank_diff_1_2), size = 3) +
+  geom_abline(intercept = 0, slope = 1) +
+  # geom_point() +
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(11, "RdYlBu")) +
+  # gradient_color_brewer(palette="Dark2") +
+  geom_text() +
+  labs(color = "Rank change", x = "Rank scenario 2", y ="Rank scenario 1")+
+  theme_bw()
+
+s2
+ggsave(paste0(basepath, "Rank_1_2.pdf"), width = 20, height = 16, units = "cm")
+
+
+
+
+s3 <- ggplot(data = data, aes(x = Rank_scenatio_3, y = Rank_scenatio_1,
+                              label = LEVEL3_COD,#LEVEL3_NAM,
+                              color = rank_diff_1_3), size = 3) +
+  geom_abline(intercept = 0, slope = 1) +
+  # geom_point() +
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(11, "RdYlBu")) +
+  # gradient_color_brewer(palette="Dark2") +
+  geom_text() +
+  labs(color = "Rank change", x = "Rank scenario 3", y ="Rank scenario 1")+
+  theme_bw()
+
+s3
+ggsave(paste0(basepath, "Rank_1_3.pdf"), width = 20, height = 16, units = "cm")
+
+
+
+
+s4 <- ggplot(data = data, aes(x = Rank_scenatio_4, y = Rank_scenatio_1,
+                              label = LEVEL3_COD,#LEVEL3_NAM,
+                              color = rank_diff_1_4), size = 3) +
+  geom_abline(intercept = 0, slope = 1) +
+  # geom_point() +
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(11, "RdYlBu")) +
+  # gradient_color_brewer(palette="Dark2") +
+  geom_text() +
+  labs(color = "Rank change", x = "Rank scenario 4", y ="Rank scenario 1")+
+  theme_bw()
+
+s4
+ggsave(paste0(basepath, "Rank_1_4.pdf"), width = 20, height = 16, units = "cm")
+
+
+
+s5 <- ggplot(data = data, aes(x = Rank_scenatio_5, y = Rank_scenatio_1,
+                              label = LEVEL3_COD,#LEVEL3_NAM,
+                              color = rank_diff_1_5), size = 3) +
+  geom_abline(intercept = 0, slope = 1) +
+  # geom_point() +
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(11, "RdYlBu")) +
+  # gradient_color_brewer(palette="Dark2") +
+  geom_text() +
+  labs(color = "Rank change", x = "Rank scenario 5", y ="Rank scenario 1")+
+  theme_bw()
+
+s5
+ggsave(paste0(basepath, "Rank_1_5.pdf"), width = 20, height = 16, units = "cm")
+
+
+
+
+
+s6 <- ggplot(data = data, aes(x = Rank_scenatio_6, y = Rank_scenatio_1,
+                              label = LEVEL3_COD,#LEVEL3_NAM,
+                              color = rank_diff_1_6), size = 3) +
+  geom_abline(intercept = 0, slope = 1) +
+  # geom_point() +
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(11, "RdYlBu")) +
+  # gradient_color_brewer(palette="Dark2") +
+  geom_text() +
+  labs(color = "Rank change", x = "Rank scenario 6", y ="Rank scenario 1")+
+  theme_bw()
+
+s6
+ggsave(paste0(basepath, "Rank_1_6.pdf"), width = 20, height = 16, units = "cm")
+
+
+
+
+
+s7 <- ggplot(data = data, aes(x = Rank_scenatio_7, y = Rank_scenatio_1,
+                              label = LEVEL3_COD,#LEVEL3_NAM,
+                              color = rank_diff_1_7), size = 3) +
+  geom_abline(intercept = 0, slope = 1) +
+  # geom_point() +
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(11, "RdYlBu")) +
+  # gradient_color_brewer(palette="Dark2") +
+  geom_text() +
+  labs(color = "Rank change", x = "Rank scenario 7", y ="Rank scenario 1")+
+  theme_bw()
+
+s7
+ggsave(paste0(basepath, "Rank_1_7.pdf"), width = 20, height = 16, units = "cm")
+
+
+
+
+s8 <- ggplot(data = data, aes(x = Rank_scenatio_8, y = Rank_scenatio_1,
+                              label = LEVEL3_COD,#LEVEL3_NAM,
+                              color = rank_diff_1_8), size = 3) +
+  geom_abline(intercept = 0, slope = 1) +
+  # geom_point() +
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(11, "RdYlBu")) +
+  # gradient_color_brewer(palette="Dark2") +
+  geom_text() +
+  labs(color = "Rank change", x = "Rank scenario 8", y ="Rank scenario 1")+
+  theme_bw()
+
+s8
+ggsave(paste0(basepath, "Rank_1_8.pdf"), width = 20, height = 16, units = "cm")
+
+
+
+
+
+
+s9 <- ggplot(data = data, aes(x = Rank_scenatio_9, y = Rank_scenatio_1,
+                              label = LEVEL3_COD,#LEVEL3_NAM,
+                              color = rank_diff_1_9), size = 3) +
+  geom_abline(intercept = 0, slope = 1) +
+  # geom_point() +
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(11, "RdYlBu")) +
+  # gradient_color_brewer(palette="Dark2") +
+  geom_text() +
+  labs(color = "Rank change", x = "Rank scenario 9", y ="Rank scenario 1")+
+  theme_bw()
+
+s9
+ggsave(paste0(basepath, "Rank_1_9.pdf"), width = 20, height = 16, units = "cm")
+
+##############################################################
+# Find countries that are consistently top of prioritisation
+#sun the ranks
+data$Rank_sum = (data$Rank_scenatio_1+
+                    data$Rank_scenatio_2+
+                    data$Rank_scenatio_3+
+                    data$Rank_scenatio_4+
+                    data$Rank_scenatio_5+
+                    data$Rank_scenatio_6+
+                    data$Rank_scenatio_7+
+                    data$Rank_scenatio_8+
+                    data$Rank_scenatio_9)
+
+# rank the ranks
+data$Rank_sum_ranked = rank(data$Rank_sum, na.last = "keep", ties.method = "first")
+data$Rank_sum_ranked
+
+
+#sun the absolute rank differences
+data$Rank_diff_sum = (abs(data$rank_diff_1_2)+
+                    abs(data$rank_diff_1_3)+
+                    abs(data$rank_diff_1_4)+
+                    abs(data$rank_diff_1_5)+
+                    abs(data$rank_diff_1_6)+
+                    abs(data$rank_diff_1_7)+
+                    abs(data$rank_diff_1_8)+
+                    abs(data$rank_diff_1_9))
+
+# rank the ranks
+data$Rank_diff_sum_ranked = rank(data$Rank_diff_sum, na.last = "keep", ties.method = "first")
+data$Rank_diff_sum_ranked
+
+
 # #PLOT THE LOT
 # plot_ly(data = data, x = ~Rank_scenatio_3, y = ~Rank_scenatio_1,
 #         text = ~paste("TDWG: ", LEVEL3_COD),
@@ -172,6 +308,9 @@ tdwg3@data = data
 ######
 
 #Save PCA and Ranks
+
+tdwg3@data = data
+
 save(tdwg3, file = paste0("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/app_data.RData"))
 save(tdwg3, file = paste0(basepath, "app_data.RData"))
 write.csv(tdwg3@data, paste0(basepath, "variables_table.csv"))

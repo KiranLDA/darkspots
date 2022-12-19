@@ -1,3 +1,110 @@
+# install.packages("biscale")
+# ## install just cowplot and sf
+# install.packages(c("cowplot", "sf"))
+#
+# ## install all suggested dependencies
+# install.packages("biscale", dependencies = TRUE)
+
+
+# load dependencies
+library(biscale)
+library(ggplot2)
+library(cowplot)
+library(sf)
+require(tmap)
+
+
+# basepath = "C:/Users/kdh10kg/Documents/github/darkspots_shiny/prep/"
+basepath = "C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/"
+
+
+##############################################################################
+##############################################################################
+### FUNCTIONS
+##############################################################################
+##############################################################################
+
+library(classInt)
+
+rotate <- function(x) t(apply(x, 2, rev))
+
+
+
+colmat<-function(nquantiles=4, upperleft=rgb(0,150,235, maxColorValue=255),
+                 upperright=rgb(130,0,80, maxColorValue=255),
+                 bottomleft="grey",
+                 bottomright=rgb(255,230,15, maxColorValue=255)
+                 , xlab="x label", ylab="y label"
+){
+
+
+  my.data<-seq(0,1,.01)
+  my.class<-classIntervals(my.data,n=nquantiles,style="quantile")
+  my.pal.1<-findColours(my.class,c(upperleft,bottomleft))
+  my.pal.2<-findColours(my.class,c(upperright, bottomright))
+  col.matrix<-matrix(nrow = 101, ncol = 101, NA)
+  for(i in 1:101){
+    my.col<-c(paste(my.pal.1[i]),paste(my.pal.2[i]))
+    col.matrix[102-i,]<-findColours(my.class,my.col)}
+  plot(c(1,1),pch=19,col=my.pal.1, cex=0.5,xlim=c(0,1),ylim=c(0,1),frame.plot=F, xlab=xlab, ylab=ylab,cex.lab=1.3)
+  for(i in 1:101){
+    col.temp<-col.matrix[i-1,]
+    points(my.data,rep((i-1)/100,101),pch=15,col=col.temp, cex=1)
+  }
+  seqs<-seq(0,100,(100/nquantiles))
+  seqs[1]<-1
+  return(col.matrix[c(seqs), c(seqs)])
+}
+
+
+
+
+##############################################################################
+##############################################################################
+## LOAD DATA
+##############################################################################
+##############################################################################
+
+
+# load("C:/Users/kdh10kg/Documents/github/darkspots_shiny/darkspots_shiny/app_data.RData")
+darkspots <- st_read(paste0(basepath, "/model_outputs.shp"))
+
+
+
+####  PROJECT A in ECKERT IV
+
+PROJ <- "+proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+
+sf_use_s2(FALSE)
+m = st_buffer(darkspots, 0)
+darkspots.prj = st_transform(st_crop(m, st_bbox(c(xmin = -180,
+                                                  xmax = 180,
+                                                  ymin = -90,
+                                                  ymax = 90))),
+                             crs = PROJ)
+
+
+
+
+
+
+##########################################################################################
+#############################################################################################
+# Normalise data for manual bivariate map
+##########################################################################################
+##########################################################################################
+
+
+darkspots.prj$drk_unprotect = darkspots.prj$bnf_4
+darkspots.prj$drk = darkspots.prj$bnf_1
+darkspots.prj$income = normalise(darkspots.prj$PC1)
+darkspots.prj$unprotect = normalise(darkspots.prj$PC2)
+darkspots.prj$linnean_yrs = - normalise(darkspots.prj$dscvrs_t_)
+darkspots.prj$wallacean_yrs = - normalise(darkspots.prj$dscrptns_t)
+darkspots.prj$linnean = darkspots.prj$SR_nk_ # SR_unknown_norm
+darkspots.prj$wallacean = darkspots.prj$SR_ng_ # SR_nogeoloc_norm #
+
+
 basepath = "C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/"
 
 load(paste0(basepath, "app_data.RData"))
@@ -79,9 +186,6 @@ label_data$hjust<-ifelse( angle < -90, 1, 0)
 label_data$angle<-ifelse(angle < -90, angle+180, angle)
 
 
-
-
-
 #####################################
 # Windplot
 #####################################
@@ -124,7 +228,7 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=year)) +       # Note that i
             angle= label_data$angle, inherit.aes = FALSE )
 
 p
-# ggsave(paste0(basepath, "skyline_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "skyline_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -273,7 +377,7 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=color)) +       # Note that 
             angle= label_data$angle, inherit.aes = FALSE )
 
 p
-# ggsave(paste0(basepath, "time2event_darkspot_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "time2event_darkspot_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -291,10 +395,10 @@ p
 
 dim=4
 col.matrix<-colmat(nquantiles=dim,
-                   upperleft="#944c3b",#"#660000",#"darkgoldenrod4",#rgb(0,150,235, maxColorValue=255),
-                   upperright= "#f3e6b3",#"#FF9933",# BOTTOM LEFT   #rgb(255,230,15, maxColorValue=255),
-                   bottomleft="#655e8a",# TOP RIGHT     #"brown2",#"black",#"grey",
-                   bottomright= "#b4ace9"#"#8009a9" #"#9966FF"#"brown1"#rgb(130,0,80, maxColorValue=255)
+                   upperleft="#f99443",#"#944c3b",#"#660000",#"darkgoldenrod4",#rgb(0,150,235, maxColorValue=255),
+                   upperright= "#fffde7",#"#f3e6b3",#"#FF9933",# BOTTOM LEFT   #rgb(255,230,15, maxColorValue=255),
+                   bottomleft="#6a1b9a",#"#655e8a",# TOP RIGHT     #"brown2",#"black",#"grey",
+                   bottomright= "#f3e5f5"#"#b4ace9"#"#8009a9" #"#9966FF"#"brown1"#rgb(130,0,80, maxColorValue=255)
 )
 
 #
@@ -427,5 +531,5 @@ p = ggplot(data, aes(x=as.factor(id), y=value, fill=color)) +       # Note that 
             angle= label_data$angle, inherit.aes = FALSE )
 
 p
-# ggsave(paste0(basepath, "prioritisation_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "prioritisation_roseplot.pdf"), width = 15, height = 15, units = "cm")
 

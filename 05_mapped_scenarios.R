@@ -256,7 +256,7 @@ p1 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p1
-ggsave(paste0(basepath, "scenario_1_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_1_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -411,7 +411,7 @@ p2 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p2
-ggsave(paste0(basepath, "scenario_2_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_2_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -564,7 +564,7 @@ p3 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p3
-ggsave(paste0(basepath, "scenario_3_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_3_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -717,7 +717,7 @@ p4 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p4
-ggsave(paste0(basepath, "scenario_4_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_4_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -872,7 +872,7 @@ p5 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p5
-ggsave(paste0(basepath, "scenario_5_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_5_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -1027,7 +1027,7 @@ p6 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p6
-ggsave(paste0(basepath, "scenario_6_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_6_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -1185,7 +1185,7 @@ p7 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p7
-ggsave(paste0(basepath, "scenario_7_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_7_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -1342,7 +1342,7 @@ p8 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p8
-ggsave(paste0(basepath, "scenario_8_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_8_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -1498,7 +1498,7 @@ p9 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that
             angle= label_data$angle, inherit.aes = FALSE )
 
 p9
-ggsave(paste0(basepath, "scenario_9_roseplot.pdf"), width = 20, height = 20, units = "cm")
+ggsave(paste0(basepath, "scenario_9_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
 
@@ -1515,3 +1515,23 @@ ggsave(paste0(basepath, "scenarios_4-6.pdf"),
 ggarrange(map7,p7,map8,p8, map9,p9,ncol = 2, nrow = 3, widths = c(1, 0.5))
 ggsave(paste0(basepath, "scenarios_7-9.pdf"),
        width = 47, height = 50, units = "cm")
+
+
+
+
+ggarrange(map1,map2,map3,
+          map4,map6,map8,
+          map5, map7,map9,
+         ncol = 3, nrow = 3)
+ggsave(paste0(basepath, "maps_1-9.pdf"),
+       width = 80, height = 50, units = "cm")
+
+ggarrange(p1,p2,p3,
+          p4,p6,p8,
+          p5,p7,p9,
+         ncol = 3, nrow = 3)
+ggsave(paste0(basepath, "roseplots_1-9.pdf"),
+       width = 42, height = 42, units = "cm")
+
+
+

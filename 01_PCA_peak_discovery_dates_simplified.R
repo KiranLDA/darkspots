@@ -604,18 +604,10 @@ fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~PC1,
 fig
 
 
-
-
-
-
-
 lm_model <- linear_reg() %>%
   set_engine('lm') %>%
   set_mode('regression') %>%
   fit(PC2 ~ SR_shortfalls, data = tdwg3@data[rows,])
-
-
-
 
 x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
                max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
@@ -634,13 +626,6 @@ fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~PC2,
 fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~PC2,
                          name = 'Regression Fit', mode = 'lines', alpha = 1)
 fig
-
-
-
-
-
-
-
 
 
 lm_model <- linear_reg() %>%
@@ -838,7 +823,7 @@ ggscatter(tdwg3@data[rows,], x = "SR_shortfalls", y = "descriptions_y30_diff",
 #----------------------------------------------------------------------------
 #####Linnean "SR_unknown"
 #----------------------------------------------------------------------------
-tdwg3@data$SR_unknown_norm_yearly_log = log2(tdwg3@data$SR_unknown_norm/20)
+tdwg3@data$SR_unknown_norm_yearly_log = log2(tdwg3@data$SR_unknown_norm/28)
 tdwg3@data$discoveries_y2010_log = log2(tdwg3@data$discoveries_y2010)
 
 
@@ -849,7 +834,7 @@ ggscatter(tdwg3@data[rows,], x = "SR_unknown_norm_yearly_log", y = "discoveries_
           cor.coef = TRUE, cor.method = "kendall",#cor.coef.name="tau",
           xlab = "# species left to be discovered (log)",
           ylab = "discovery rate across 2010s (log)", main="(a) Linnean shortfall")
-# ggsave(paste0(basepath, "linnean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
+ggsave(paste0(basepath, "linnean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
 
 # ggscatter(tdwg3@data[rows,], x = "SR_unknown_yearly", y = "discoveries_y1980",
 #           add = "reg.line", conf.int = TRUE,
@@ -881,8 +866,9 @@ ggscatter(tdwg3@data[rows,], x = "SR_unknown_norm_yearly_log", y = "discoveries_
 #           add = "reg.line", conf.int = TRUE,
 #           cor.coef = TRUE, cor.method = "pearson",
 #           xlab = "SR_nogeolocalisation", ylab = "discoveries_y2010")
-tdwg3@data$SR_nogeoloc_norm_yearly_log =log2(tdwg3@data$SR_nogeoloc_norm/20)
+tdwg3@data$SR_nogeoloc_norm_yearly_log =log2(tdwg3@data$SR_nogeoloc_norm/28)
 tdwg3@data$descriptions_y2010_log = log2(tdwg3@data$descriptions_y2010)
+
 
 ggscatter(tdwg3@data[rows,], x = "SR_nogeoloc_norm_yearly_log", y = "descriptions_y2010_log",
           add = "reg.line", conf.int = TRUE,
@@ -891,7 +877,7 @@ ggscatter(tdwg3@data[rows,], x = "SR_nogeoloc_norm_yearly_log", y = "description
           cor.coef = TRUE, cor.method = "kendall",
           xlab = "# species left to be geolocated (log)",
           ylab = "geolocation rate across 2010s (log)", main="(b) Wallacean shortfall")
-# ggsave(paste0(basepath, "wallacean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
+ggsave(paste0(basepath, "wallacean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
 
 
 # ggscatter(tdwg3@data[rows,], x = "SR_nogeolocalisation_yearly", y = "descriptions_y1980",
