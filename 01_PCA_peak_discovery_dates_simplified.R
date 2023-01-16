@@ -831,9 +831,9 @@ ggscatter(tdwg3@data[rows,], x = "SR_unknown_norm_yearly_log", y = "discoveries_
           add = "reg.line", conf.int = TRUE,
           # yscale = "log2",
           # xscale = "log2",
-          cor.coef = TRUE, cor.method = "kendall",#cor.coef.name="tau",
-          xlab = "# species left to be discovered (log)",
-          ylab = "discovery rate across 2010s (log)", main="(a) Linnean shortfall")
+          cor.coef = TRUE, cor.method = "kendall", cor.coef.name="tau",
+          xlab = "Species left to be described (log)",
+          ylab = "Description rate across 2010s (log)", main="")#(a) Linnean shortfall")
 ggsave(paste0(basepath, "linnean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
 
 # ggscatter(tdwg3@data[rows,], x = "SR_unknown_yearly", y = "discoveries_y1980",
@@ -874,9 +874,9 @@ ggscatter(tdwg3@data[rows,], x = "SR_nogeoloc_norm_yearly_log", y = "description
           add = "reg.line", conf.int = TRUE,
           # yscale = "log2",
           # xscale = "log2",
-          cor.coef = TRUE, cor.method = "kendall",
-          xlab = "# species left to be geolocated (log)",
-          ylab = "geolocation rate across 2010s (log)", main="(b) Wallacean shortfall")
+          cor.coef = TRUE, cor.method = "kendall", cor.coef.name="tau",
+          xlab = "Species left to be geolocated (log)",
+          ylab = "Geolocation rate across 2010s (log)", main="")#(b) Wallacean shortfall")
 ggsave(paste0(basepath, "wallacean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
 
 
