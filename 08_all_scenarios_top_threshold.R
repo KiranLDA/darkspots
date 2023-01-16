@@ -32,7 +32,7 @@ colmat<-function(nquantiles=4, upperleft=rgb(0,150,235, maxColorValue=255),
 
 
   my.data<-seq(0,1,.01)
-  my.class<-classIntervals(my.data,n=nquantiles,style="quantile")
+  my.class<-classIntervals(my.data,n=nquantiles,style="fisher")
   my.pal.1<-findColours(my.class,c(upperleft,bottomleft))
   my.pal.2<-findColours(my.class,c(upperright, bottomright))
   col.matrix<-matrix(nrow = 101, ncol = 101, NA)
@@ -146,9 +146,9 @@ map1 <-  ggplot() +
               size = 2,
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"),
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"),
                     labels = c('Global', 'Global & Regional', "None", 'Regional'))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   # guides(color = "none") +
   guides(color = "none",
          fill=guide_legend(title="Priority"), override.aes = list(size = 0.5)) +
@@ -184,8 +184,8 @@ map1 <-  ggplot() +
               size = 2,
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -239,8 +239,8 @@ map2 <-  ggplot() +
 
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -294,8 +294,8 @@ map3 <-  ggplot() +
 
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -348,8 +348,8 @@ map4 <-  ggplot() +
 
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -404,8 +404,8 @@ map5 <-  ggplot() +
 
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -460,8 +460,8 @@ map6 <-  ggplot() +
 
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -514,8 +514,8 @@ map7 <-  ggplot() +
 
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -568,8 +568,8 @@ map8 <-  ggplot() +
 
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =   c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -622,8 +622,8 @@ map9 <-  ggplot() +
 
               stat = "sf_coordinates"
   ) +
-  scale_fill_manual(values =   c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
-  scale_color_manual(values =  c("black", "#1f5c6c",  "grey90","#84c995"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
+  scale_fill_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+# c("black", "#1f5c6c",  "grey90","#84c995"))+#, na.value="white")+ #"#328380",
+  scale_color_manual(values =  c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#, c("black","brown","grey","red"))+ #, na.value="white")+ #data$color_class) +#=c("black","brown","grey","red"))+
   guides(color = "none") +
   theme_bw() +
   theme(axis.title.y=element_blank(),
@@ -671,7 +671,7 @@ data$Value[is.na(data$Value)] = "grey"
 ## use a white border of size 0.5 unit to separate the tiles
 gg<- ggplot(data, aes(x=factor(Index), y=Series, fill=Value), show.legend = FALSE) +
   geom_tile(color="white", size=0.5) +
-  scale_fill_manual(values = c("black", "#1f5c6c",  "grey90","#84c995"))+#,
+  scale_fill_manual(values = c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"))+#,
                     #labels = c('Global', 'Global & Regional', "None", 'Regional') )+
   scale_y_discrete(#as.character(1:nrow(priorities)),
                    labels= c("Scenario 1","Scenario 2","Scenario 3",
@@ -688,8 +688,103 @@ gg<- ggplot(data, aes(x=factor(Index), y=Series, fill=Value), show.legend = FALS
 
 gg
 
-ggsave(paste0(basepath, "scenario_matrix_1-9_top_2.pdf"),
+ggsave(paste0(basepath, "scenario_matrix_1-9_top_YlGnBu.pdf"),
        width = 20, height = 8, units = "cm")
 
+
+## use a white border of size 0.5 unit to separate the tiles
+gg<- ggplot(data, aes(x=factor(Index), y=Series, fill=Value), show.legend = FALSE) +
+  geom_tile(color="white", size=0.5) +
+  scale_fill_manual(values = c("#113389", "#2a9bc1",  "#f6fcc8","#84cfbb"),
+  labels = c('Global', 'Global & Regional', "None", 'Regional') )+
+  scale_y_discrete(#as.character(1:nrow(priorities)),
+    labels= c("Scenario 1","Scenario 2","Scenario 3",
+              "Scenario 4","Scenario 5","Scenario 6",
+              "Scenario 7","Scenario 8","Scenario 9"))+
+  scale_x_discrete(breaks = unique(data$Index),#as.character(1:nrow(priorities)),
+                   labels= unique(data$Label))+#priorities$LEVEL3_N) +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1),
+        # legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank()) #+
+
+gg
+
+
+legend <- cowplot::get_legend(gg)
+legend
+ggsave(paste0(basepath, "YlGnBu_legend.pdf"),
+       width = 5, height = 5, units = "cm")
+
+
+
+##########################################################################################
+#############################################################################################
+# Normalise data for manual bivariate map
+##########################################################################################
+##########################################################################################
+
+
+
+darkspots.prj$bnf_all = (darkspots.prj$bnf_1 +
+                           darkspots.prj$bnf_2 +
+                           darkspots.prj$bnf_3 +
+                           darkspots.prj$bnf_4 +
+                           darkspots.prj$bnf_5 +
+                           darkspots.prj$bnf_6 +
+                           darkspots.prj$bnf_7 +
+                           darkspots.prj$bnf_8 +
+                           darkspots.prj$bnf_9)
+
+
+
+darkspots.prj$bnf_all_norm = normalise(darkspots.prj$bnf_all)
+
+
+
+#####################################################################################################################
+# PLOT
+#######################################
+
+data = darkspots.prj
+
+
+# create map
+map10 <-  ggplot() +
+  geom_sf(data = data, mapping = aes(fill = bnf_all),
+          color = aes(fill = bnf_all),#NA,
+
+          size = 0.4#, show.legend = FALSE
+  ) +
+  geom_sf() +  #+
+  geom_point( data= data,
+              aes(color =  bnf_all,  #fill = bi_class,
+                  geometry = geometry),
+              size = 2,
+              stat = "sf_coordinates"
+  ) +
+  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "YlGnBu"))+
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "YlGnBu"))+
+  guides(color = "none",
+         fill=guide_legend(title="Summed benefit"), override.aes = list(size = 0.5)) +
+
+  # bi_theme() +
+  theme_bw() +
+  theme(axis.title.y=element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.text.x=element_blank(),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.text=element_text(size=8),
+        legend.title=element_text(size=10)
+  )
+
+map10
+#
+# legend <- cowplot::get_legend(map1)
+# legend
+ggsave(paste0(basepath, "maps_summed_benefit_YlGnBu.pdf"),
+       width = 30, height = 15, units = "cm")
 
 

@@ -39,7 +39,7 @@ colmat<-function(nquantiles=4, upperleft=rgb(0,150,235, maxColorValue=255),
 
 
   my.data<-seq(0,1,.01)
-  my.class<-classIntervals(my.data,n=nquantiles,style="quantile")
+  my.class<-classIntervals(my.data,n=nquantiles,style="fisher")
   my.pal.1<-findColours(my.class,c(upperleft,bottomleft))
   my.pal.2<-findColours(my.class,c(upperright, bottomright))
   col.matrix<-matrix(nrow = 101, ncol = 101, NA)
@@ -263,7 +263,7 @@ names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 
 
 bi_label <- bi_class(darkspots.prj,y=linnean, x=wallacean,
-                 style = "quantile", dim = dim)
+                 style = "fisher", dim = dim)
 
 
 data = cbind(tdwg3@data[,c("LEVEL3_NAM","LEVEL1_COD", "shortfalls_norm_index")], bi_label$bi_class) %>%
@@ -415,7 +415,7 @@ names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 
 
 bi_label <- bi_class(darkspots.prj, y=drk_unprotect, x=income,
-                 style = "quantile", dim = dim)
+                 style = "fisher", dim = dim)
 
 
 

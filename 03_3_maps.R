@@ -39,7 +39,7 @@ colmat<-function(nquantiles=4, upperleft=rgb(0,150,235, maxColorValue=255),
 
 
   my.data<-seq(0,1,.01)
-  my.class<-classIntervals(my.data,n=nquantiles,style="quantile")
+  my.class<-classIntervals(my.data,n=nquantiles,style="fisher")
   my.pal.1<-findColours(my.class,c(upperleft,bottomleft))
   my.pal.2<-findColours(my.class,c(upperright, bottomright))
   col.matrix<-matrix(nrow = 101, ncol = 101, NA)
@@ -127,7 +127,7 @@ darkspots.prj$wallacean = darkspots.prj$SR_ng_ # SR_nogeoloc_norm #
 # names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 
 # data <- bi_class(darkspots.prj,y=drk, x=discoveri5,
-#                  style = "quantile", dim = dim)
+#                  style = "fisher", dim = dim)
 #
 
 data = darkspots.prj
@@ -217,7 +217,7 @@ names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 
 
 data <- bi_class(darkspots.prj,y=linnean, x=wallacean,
-                 style = "quantile", dim = dim)
+                 style = "fisher", dim = dim)
 
 
 
@@ -280,7 +280,7 @@ names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 
 
 data <- bi_class(darkspots.prj, y=drk_unprotect, x=income,
-                 style = "quantile", dim = dim)
+                 style = "fisher", dim = dim)
 
 
 
@@ -341,7 +341,7 @@ names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 
 
 data <- bi_class(darkspots.prj,y=unprotect, x=income,
-                 style = "quantile", dim = dim)
+                 style = "fisher", dim = dim)
 
 
 
@@ -400,7 +400,7 @@ ggsave(paste0(basepath,"PC1_PC2_map.pdf"), width = 30, height = 12, units = "cm"
 # # names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
 #
 # # data <- bi_class(darkspots.prj,y=drk, x=discoveri5,
-# #                  style = "quantile", dim = dim)
+# #                  style = "fisher", dim = dim)
 # #
 #
 # data = darkspots.prj
