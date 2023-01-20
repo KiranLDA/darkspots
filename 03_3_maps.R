@@ -85,7 +85,34 @@ darkspots.prj = st_transform(st_crop(m, st_bbox(c(xmin = -180,
 
 
 
+#####################################################################
 
+# create bounding box
+# create a bounding box - world extent
+b.box <- as(raster::extent(-180, 180, -90, 90), "SpatialPolygons")
+
+# assign CRS to box
+WGS84 <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+
+proj4string(b.box) <- WGS84
+
+# create graticules/grid lines from box
+grid <- gridlines(b.box,
+                  easts  = seq(from=-180, to=180, by=20),
+                  norths = seq(from=-90, to=90, by=10))
+
+# give the PORJ.4 string for Eckert IV projection
+proj_eckert <- "+proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+
+# transform bounding box
+grid.DT <- data.table::data.table(map_data(SpatialLinesDataFrame(sl=grid,
+                                                                 data=data.frame(1:length(grid)),
+                                                                 match.ID = FALSE)))
+# assign matrix of projected coordinates as two columns in data table
+grid.DT[, c("X","Y") := data.table::data.table(proj4::project(cbind(long, lat),
+                                                              proj=proj_eckert))]
+
+#####################################################################
 
 
 ##########################################################################################
@@ -151,10 +178,25 @@ map <- ggplot() +
   # scale_color_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
   guides(color = "none") +
   bi_theme() +
+  geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
+                           |(long %in% c(-180,180) & lat %in% c(-90,90)
+                             & region == "EW")],
+            aes(x = X, y = Y, group = group),
+            linetype = "solid", colour = "black", size = .3) +
   theme(axis.title.y=element_blank(),
         axis.title.x=element_blank(),
         axis.text.y=element_blank(),
-        axis.text.x=element_blank())
+        axis.text.x=element_blank(),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        legend.text=element_text(size=8),
+        legend.title=element_text(size=10)
+  )
+  # theme(axis.title.y=element_blank(),
+  #       axis.title.x=element_blank(),
+  #       axis.text.y=element_blank(),
+  #       axis.text.x=element_blank())
 map
 
 
@@ -175,13 +217,21 @@ legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill 
                                 guides(color = "none",
                                        fill=guide_legend(title="Peak discovery year"),override.aes = list(size = 0.5)) +
                                 bi_theme() +
-                                theme(
-                                  axis.title.y=element_blank(),
-                                  axis.title.x=element_blank(),
-                                  axis.text.y=element_blank(),
-                                  axis.text.x=element_blank(),
-                                  legend.text=element_text(size=8),
-                                  legend.title=element_text(size=10))
+                                geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
+                                                         |(long %in% c(-180,180) & lat %in% c(-90,90)
+                                                           & region == "EW")],
+                                          aes(x = X, y = Y, group = group),
+                                          linetype = "solid", colour = "black", size = .3) +
+                                theme(axis.title.y=element_blank(),
+                                      axis.title.x=element_blank(),
+                                      axis.text.y=element_blank(),
+                                      axis.text.x=element_blank(),
+                                      panel.border = element_blank(),
+                                      panel.grid.minor = element_blank(),
+                                      panel.grid.major = element_blank(),
+                                      legend.text=element_text(size=8),
+                                      legend.title=element_text(size=10)
+                                )
 )
 
 
@@ -237,10 +287,21 @@ map <- ggplot() +
   bi_scale_color(pal = custom_pal4, dim=dim)+#,flip_axes = TRUE, rotate_pal = TRUE) +
   guides(color = "none") +
   bi_theme() +
+  geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
+                           |(long %in% c(-180,180) & lat %in% c(-90,90)
+                             & region == "EW")],
+            aes(x = X, y = Y, group = group),
+            linetype = "solid", colour = "black", size = .3) +
   theme(axis.title.y=element_blank(),
         axis.title.x=element_blank(),
         axis.text.y=element_blank(),
-        axis.text.x=element_blank())
+        axis.text.x=element_blank(),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        legend.text=element_text(size=8),
+        legend.title=element_text(size=10)
+  )
 
 
 
@@ -300,10 +361,21 @@ map <- ggplot() +
   bi_scale_color(pal = custom_pal4, dim=dim)+#,flip_axes = TRUE, rotate_pal = TRUE) +
   guides(color = "none") +
   bi_theme() +
+  geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
+                           |(long %in% c(-180,180) & lat %in% c(-90,90)
+                             & region == "EW")],
+            aes(x = X, y = Y, group = group),
+            linetype = "solid", colour = "black", size = .3) +
   theme(axis.title.y=element_blank(),
         axis.title.x=element_blank(),
         axis.text.y=element_blank(),
-        axis.text.x=element_blank())
+        axis.text.x=element_blank(),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        legend.text=element_text(size=8),
+        legend.title=element_text(size=10)
+  )
 
 
 
@@ -361,10 +433,21 @@ map <- ggplot() +
   bi_scale_color(pal = custom_pal4, dim=dim)+#,flip_axes = TRUE, rotate_pal = TRUE) +
   guides(color = "none") +
   bi_theme() +
+  geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
+                           |(long %in% c(-180,180) & lat %in% c(-90,90)
+                             & region == "EW")],
+            aes(x = X, y = Y, group = group),
+            linetype = "solid", colour = "black", size = .3) +
   theme(axis.title.y=element_blank(),
         axis.title.x=element_blank(),
         axis.text.y=element_blank(),
-        axis.text.x=element_blank())
+        axis.text.x=element_blank(),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        legend.text=element_text(size=8),
+        legend.title=element_text(size=10)
+  )
 
 
 

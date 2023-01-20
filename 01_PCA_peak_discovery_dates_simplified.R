@@ -290,7 +290,7 @@ subset =tdwg3@data[rows,]
 rownames(subset) = tdwg3@data[rows,"LEVEL3_COD"]
 
 autoplot(sdg.pca, data = subset,
-         colour ='discoveries_max_year', #  "discoveries_time_diff",  #'Income.Group', # num_instit, discoveries, descriptions, spp_left, tot_exp_spp_wcvp, left_spp_wcvp
+         colour = 'Income.Group', #"discoveries_time_diff",   'discoveries_max_year', # # num_instit, discoveries, descriptions, spp_left, tot_exp_spp_wcvp, left_spp_wcvp
          loadings = TRUE,
          loadings.label = TRUE,
          # loadings.colour = 'black',
@@ -304,9 +304,10 @@ autoplot(sdg.pca, data = subset,
          lwd=4
 )+
   # geom_point(alpha=0.05, size=10,)+
-  theme_bw() +
-  scale_color_gradient2(midpoint=1930, low="yellow", mid="purple",
-                        high="black", space ="Lab" )
+  theme_bw() #+
+  # scale_colour_continuous()
+  # scale_color_gradient2(midpoint=1930, low="yellow", mid="purple",
+  #                       high="black", space ="Lab" )
 
 autoplot(sdg.pca, data = subset,
          colour = "blue",#'discoveries_max_year', #  "discoveries_time_diff",  #'Income.Group', # num_instit, discoveries, descriptions, spp_left, tot_exp_spp_wcvp, left_spp_wcvp
@@ -331,6 +332,35 @@ autoplot(sdg.pca, data = subset,
   theme_bw()# +
   # scale_color_gradient2(midpoint=1930, low="yellow", mid="purple",
                         # high="black", space ="Lab" )
+
+
+autoplot(sdg.pca, data = subset,
+         colour = 'Income.Group',,#'discoveries_max_year', #  "discoveries_time_diff",  #'Income.Group', # num_instit, discoveries, descriptions, spp_left, tot_exp_spp_wcvp, left_spp_wcvp
+         loadings = TRUE,
+         loadings.label = TRUE,
+         loadings.colour = "black",
+         loadings.label.colour = "black",
+         loadings.size =5,
+         # loadings.colour = 'black',
+         label = TRUE,#"Country",
+         label.colour='Income.Group',#"black",
+         label.alpha=0.3,
+         label.position=position_jitter(width=0.012,height=0.012),
+         # shape= FALSE,
+         shape=16,
+         alpha=0.7,
+         size=2,
+         label.size = 4,
+         lwd=4
+)+
+  # position_jitter(width = NULL, height = NULL, seed = NA) +
+  # geom_jitter()+
+  # geom_point(alpha=0.05, size=10,)+
+  theme_bw()# +
+# scale_color_gradient2(midpoint=1930, low="yellow", mid="purple",
+# high="black", space ="Lab" )
+
+
 
 
 autoplot(sdg.pca, data = subset,
@@ -376,284 +406,284 @@ autoplot(sdg.pca, data = subset,
   scale_color_gradient2(midpoint=100, low="black", mid="purple",
                         high="yellow", space ="Lab" )
 
-
-plotly::plot_ly(data = tdwg3@data[rows,], x = ~PC1, y = ~PC2,
-        type="scatter",mode = "markers",
-        text = ~paste("TDWG: ", LEVEL3_COD),
-        color = ~discoveries_time_diff,
-        marker = list(size=~discoveries_time_diff*0.2, sopacity = 0.5))#
-
-
-plotly::plot_ly(data = tdwg3@data[rows,], x = ~PC1, y = ~PC2,
-                type="scatter",mode = "markers",
-                text = ~paste("TDWG: ", LEVEL3_COD),
-                color = ~descriptions_time_diff,
-                marker = list(size=~descriptions_time_diff*0.1,
-                              opacity = 0.5))
-
-
-##########################################################################################
-
-### PCA again discovery/description
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC1 ~ discoveries_time_diff, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
-               max(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('discoveries_time_diff')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC1')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~discoveries_time_diff, y = ~PC1,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~discoveries_time_diff, y = ~PC1,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-
-
-
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC1 ~ descriptions_time_diff, data = tdwg3@data[rows,])
-
-
-x_range <- seq(min(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
-               max(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('descriptions_time_diff')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC1')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~descriptions_time_diff, y = ~PC1,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~descriptions_time_diff, y = ~PC1,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC2 ~ discoveries_time_diff, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
-               max(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('discoveries_time_diff')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC2')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~discoveries_time_diff, y = ~PC2,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~discoveries_time_diff, y = ~PC2,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-
-
-
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC2 ~ descriptions_time_diff, data = tdwg3@data[rows,])
-
-
-x_range <- seq(min(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
-               max(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('descriptions_time_diff')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC2')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~descriptions_time_diff, y = ~PC2,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~descriptions_time_diff, y = ~PC2,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC3 ~ discoveries_time_diff, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
-               max(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('discoveries_time_diff')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC3')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~discoveries_time_diff, y = ~PC3,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~discoveries_time_diff, y = ~PC3,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-
-
-
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC3 ~ descriptions_time_diff, data = tdwg3@data[rows,])
-
-
-x_range <- seq(min(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
-               max(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('descriptions_time_diff')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC3')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~descriptions_time_diff, y = ~PC3,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~descriptions_time_diff, y = ~PC3,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-
-##########################################################################################
-
-### PCA against  time2event
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC1 ~ SR_shortfalls, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('SR_shortfalls')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC1')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~PC1,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~PC1,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC2 ~ SR_shortfalls, data = tdwg3@data[rows,])
-
-x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('SR_shortfalls')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC2')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~PC2,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~PC2,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(PC3 ~ SR_shortfalls, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('SR_shortfalls')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('PC3')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~PC3,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~PC3,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
+#
+# plotly::plot_ly(data = tdwg3@data[rows,], x = ~PC1, y = ~PC2,
+#         type="scatter",mode = "markers",
+#         text = ~paste("TDWG: ", LEVEL3_COD),
+#         color = ~discoveries_time_diff,
+#         marker = list(size=~discoveries_time_diff*0.2, sopacity = 0.5))#
+#
+#
+# plotly::plot_ly(data = tdwg3@data[rows,], x = ~PC1, y = ~PC2,
+#                 type="scatter",mode = "markers",
+#                 text = ~paste("TDWG: ", LEVEL3_COD),
+#                 color = ~descriptions_time_diff,
+#                 marker = list(size=~descriptions_time_diff*0.1,
+#                               opacity = 0.5))
+#
+#
+# ##########################################################################################
+#
+# ### PCA again discovery/description
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC1 ~ discoveries_time_diff, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('discoveries_time_diff')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC1')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~discoveries_time_diff, y = ~PC1,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~discoveries_time_diff, y = ~PC1,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+#
+#
+#
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC1 ~ descriptions_time_diff, data = tdwg3@data[rows,])
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('descriptions_time_diff')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC1')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~descriptions_time_diff, y = ~PC1,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~descriptions_time_diff, y = ~PC1,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC2 ~ discoveries_time_diff, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('discoveries_time_diff')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC2')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~discoveries_time_diff, y = ~PC2,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~discoveries_time_diff, y = ~PC2,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+#
+#
+#
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC2 ~ descriptions_time_diff, data = tdwg3@data[rows,])
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('descriptions_time_diff')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC2')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~descriptions_time_diff, y = ~PC2,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~descriptions_time_diff, y = ~PC2,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC3 ~ discoveries_time_diff, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$discoveries_time_diff, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('discoveries_time_diff')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC3')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~discoveries_time_diff, y = ~PC3,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~discoveries_time_diff, y = ~PC3,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+#
+#
+#
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC3 ~ descriptions_time_diff, data = tdwg3@data[rows,])
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$descriptions_time_diff, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('descriptions_time_diff')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC3')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~descriptions_time_diff, y = ~PC3,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~descriptions_time_diff, y = ~PC3,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+#
+# ##########################################################################################
+#
+# ### PCA against  time2event
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC1 ~ SR_shortfalls, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('SR_shortfalls')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC1')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~PC1,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~PC1,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC2 ~ SR_shortfalls, data = tdwg3@data[rows,])
+#
+# x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('SR_shortfalls')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC2')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~PC2,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~PC2,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(PC3 ~ SR_shortfalls, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('SR_shortfalls')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('PC3')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~PC3,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~PC3,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
 
 
 
@@ -664,126 +694,126 @@ fig
 #################################################################################
 
 
-
-
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(descriptions_time_diff ~ SR_shortfalls, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('SR_shortfalls')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('descriptions_time_diff')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~descriptions_time_diff,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~descriptions_time_diff,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(discoveries_time_diff ~ SR_shortfalls, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('SR_shortfalls')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('discoveries_time_diff')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~discoveries_time_diff,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~discoveries_time_diff,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-
-# descriptions_y2010
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(descriptions_y2010 ~ SR_shortfalls, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('SR_shortfalls')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('descriptions_y2010')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~descriptions_y2010,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~descriptions_y2010,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
-
-# discoveries_y2010
-
-
-lm_model <- linear_reg() %>%
-  set_engine('lm') %>%
-  set_mode('regression') %>%
-  fit(discoveries_y2010 ~ SR_shortfalls, data = tdwg3@data[rows,])
-
-
-
-
-x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
-               length.out = 100)
-x_range <- matrix(x_range, nrow=100, ncol=1)
-xdf <- data.frame(x_range)
-colnames(xdf) <- c('SR_shortfalls')
-
-ydf <- lm_model %>% predict(xdf)
-
-colnames(ydf) <- c('discoveries_y2010')
-xy <- data.frame(xdf, ydf)
-
-fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~discoveries_y2010,
-               type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
-fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~discoveries_y2010,
-                         name = 'Regression Fit', mode = 'lines', alpha = 1)
-fig
-
+#
+#
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(descriptions_time_diff ~ SR_shortfalls, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('SR_shortfalls')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('descriptions_time_diff')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~descriptions_time_diff,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~descriptions_time_diff,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(discoveries_time_diff ~ SR_shortfalls, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('SR_shortfalls')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('discoveries_time_diff')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~discoveries_time_diff,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~discoveries_time_diff,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+#
+# # descriptions_y2010
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(descriptions_y2010 ~ SR_shortfalls, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('SR_shortfalls')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('descriptions_y2010')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~descriptions_y2010,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~descriptions_y2010,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
+#
+# # discoveries_y2010
+#
+#
+# lm_model <- linear_reg() %>%
+#   set_engine('lm') %>%
+#   set_mode('regression') %>%
+#   fit(discoveries_y2010 ~ SR_shortfalls, data = tdwg3@data[rows,])
+#
+#
+#
+#
+# x_range <- seq(min(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                max(tdwg3@data[rows,]$SR_shortfalls, na.rm=TRUE),
+#                length.out = 100)
+# x_range <- matrix(x_range, nrow=100, ncol=1)
+# xdf <- data.frame(x_range)
+# colnames(xdf) <- c('SR_shortfalls')
+#
+# ydf <- lm_model %>% predict(xdf)
+#
+# colnames(ydf) <- c('discoveries_y2010')
+# xy <- data.frame(xdf, ydf)
+#
+# fig <- plot_ly(tdwg3@data[rows,], x = ~SR_shortfalls, y = ~discoveries_y2010,
+#                type = 'scatter', alpha = 0.65, mode = 'markers', name = 'Tips')
+# fig <- fig %>% add_trace(data = xy, x = ~SR_shortfalls, y = ~discoveries_y2010,
+#                          name = 'Regression Fit', mode = 'lines', alpha = 1)
+# fig
+#
 
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
@@ -828,12 +858,16 @@ tdwg3@data$discoveries_y2010_log = log2(tdwg3@data$discoveries_y2010)
 
 
 ggscatter(tdwg3@data[rows,], x = "SR_unknown_norm_yearly_log", y = "discoveries_y2010_log",
-          add = "reg.line", conf.int = TRUE,
+          add = "reg.line", conf.int = FALSE,
           # yscale = "log2",
           # xscale = "log2",
-          cor.coef = TRUE, cor.method = "kendall", cor.coef.name="tau",
+          cor.coef = FALSE, cor.method = "kendall", #cor.coef.name="tau",# rr.label="tau",
           xlab = "Species left to be described (log)",
-          ylab = "Description rate across 2010s (log)", main="")#(a) Linnean shortfall")
+          ylab = "Description rate across 2010s (log)", main="A.") +#(a) Linnean shortfall")
+  stat_cor(
+    aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
+    label.x = -16
+  )
 ggsave(paste0(basepath, "linnean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
 
 # ggscatter(tdwg3@data[rows,], x = "SR_unknown_yearly", y = "discoveries_y1980",
@@ -871,12 +905,16 @@ tdwg3@data$descriptions_y2010_log = log2(tdwg3@data$descriptions_y2010)
 
 
 ggscatter(tdwg3@data[rows,], x = "SR_nogeoloc_norm_yearly_log", y = "descriptions_y2010_log",
-          add = "reg.line", conf.int = TRUE,
+          add = "reg.line", conf.int = FALSE,
           # yscale = "log2",
           # xscale = "log2",
-          cor.coef = TRUE, cor.method = "kendall", cor.coef.name="tau",
+          cor.coef = FALSE, cor.method = "kendall", cor.coef.name="tau",
           xlab = "Species left to be geolocated (log)",
-          ylab = "Geolocation rate across 2010s (log)", main="")#(b) Wallacean shortfall")
+          ylab = "Geolocation rate across 2010s (log)", main="B.") +  # Wallacean shortfall")
+  stat_cor(
+    aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
+    label.x = -16
+  )
 ggsave(paste0(basepath, "wallacean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
 
 
