@@ -254,8 +254,8 @@ tdwg3@data =  tdwg3@data %>%
 # load in Ian's simulations
 
 
-# shortfalls <- read.csv(paste0(basepath,"shortfalls_normalised_darkhot_2022_12_13.csv"))
-shortfalls <- read.csv(paste0(basepath,"shortfalls_not_rescaled_normalised_darkhot_2023_01_16.csv"))
+shortfalls <- read.csv(paste0(basepath,"shortfalls_normalised_darkhot_2022_12_13.csv"))
+# shortfalls <- read.csv(paste0(basepath,"shortfalls_not_rescaled_normalised_darkhot_2023_01_16.csv"))
 
 tdwg3@data =  tdwg3@data %>%
   left_join(shortfalls)

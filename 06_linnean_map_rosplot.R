@@ -130,7 +130,6 @@ darkspots.prj$wallacean = darkspots.prj$SR_ng_ # SR_nogeoloc_norm #
 
 
 
-
 #######################################
 ##########################################################
 # Linnean
@@ -151,10 +150,10 @@ map1 <- ggplot() +
               size = 2,
               stat = "sf_coordinates"
   ) +
-  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
-  scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
-  # scale_fill_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
-  # scale_color_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+  # scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
+  # scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
+  scale_fill_gradient2(high = "#6eabbd", mid = "#bfd3d9", low ="#e8e8e8" , midpoint = 0.6)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+  scale_color_gradient2(high = "#6eabbd", mid = "#bfd3d9", low ="#e8e8e8" , midpoint = 0.6)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
   guides(color = "none") +
   bi_theme() +
   geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
@@ -185,10 +184,10 @@ legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill 
                                             size = 2,
                                             stat = "sf_coordinates"
                                 ) +
-                                scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
-                                scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
-                                # scale_fill_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
-                                # scale_color_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+                                # scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
+                                # scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
+                                scale_fill_gradient2(high = "#6eabbd", mid = "#bfd3d9", low ="#e8e8e8" , midpoint = 0.6)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+                                scale_color_gradient2(high = "#6eabbd", mid = "#bfd3d9", low ="#e8e8e8" , midpoint = 0.6)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
                                 guides(color = "none",
                                        fill=guide_legend(title="Normalised Linnean shortfall"),override.aes = list(size = 0.5)) +
                                 bi_theme() +
@@ -294,7 +293,12 @@ label_data$angle<-ifelse(angle < -90, angle+180, angle)
 p1 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that id is a factor. If x is numeric, there is some space between the first bar
   geom_bar(aes(x=as.factor(id), y=value, fill=value), stat="identity", alpha=0.9) +
   # scale_fill_manual(values=c("darkred" ,"black", "coral" ,"grey")) +
-  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues")) +
+  # scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues")) +
+  # scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
+  # scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Blues"))+
+  scale_fill_gradient2(high = "#6eabbd", mid = "#bfd3d9", low ="#e8e8e8" , midpoint = 0.6)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+  # scale_color_gradient2(high = "#6eabbd", low ="#e8e8e8" , midpoint = 0.6)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+
   # scale_fill_brewer(palette = "RdBu") +
   # ylim(-10,9) +#120) +
   ylim(-max(data$value,na.rm=T)*2,max(data$value,na.rm=T)*2.8) +
@@ -358,8 +362,11 @@ map2 <- ggplot() +
               size = 2,
               stat = "sf_coordinates"
   ) +
-  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds"))+
-  scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds"))+
+  # scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds"))+
+  # scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds"))+
+  scale_fill_gradient2(high = "#c85a59", mid = "#dbbab9",low ="#e8e8e8" , midpoint = 0.6)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+  scale_color_gradient2(high = "#c85a59", mid = "#dbbab9",low ="#e8e8e8" , midpoint = 0.6)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+
   guides(color = "none") +
   bi_theme() +
   geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
@@ -390,10 +397,10 @@ legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill 
                                             size = 2,
                                             stat = "sf_coordinates"
                                 ) +
-                                scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds"))+
-                                scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds"))+
-                                # scale_fill_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
-                                # scale_color_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+                                # scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds"))+
+                                # scale_color_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds"))+
+                                scale_fill_gradient2(high = "#c85a59", mid = "#dbbab9",low ="#e8e8e8" , midpoint = 0.6)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+                                scale_color_gradient2(high = "#c85a59", mid = "#dbbab9",low ="#e8e8e8" , midpoint = 0.6)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
                                 guides(color = "none",
                                        fill=guide_legend(title="Normalised Wallacean shortfall"),override.aes = list(size = 0.5)) +
                                 bi_theme() +
@@ -477,7 +484,9 @@ label_data$angle<-ifelse(angle < -90, angle+180, angle)
 #####################################
 p2 = ggplot(data, aes(x=as.factor(id), y=value, fill=value)) +       # Note that id is a factor. If x is numeric, there is some space between the first bar
   geom_bar(aes(x=as.factor(id), y=value, fill=value), stat="identity", alpha=0.9) +
-  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds")) +
+  # scale_fill_gradientn(colours=RColorBrewer::brewer.pal(7, "Reds")) +
+  scale_fill_gradient2(high = "#c85a59", mid = "#dbbab9", low ="#e8e8e8" , midpoint = 0.6)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+  # scale_color_gradient2(high = "#c85a59", low ="#e8e8e8" , midpoint = 0.6)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
   ylim(-max(data$value,na.rm=T)*2,max(data$value,na.rm=T)*2.8) +
   theme_minimal() +
   theme(

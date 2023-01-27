@@ -162,12 +162,12 @@ data = darkspots.prj
 
 # create map
 map <- ggplot() +
-  geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
-          color = aes(fill = dscvrs_m_1),#NA,
+  geom_sf(data = data, mapping = aes(fill = dscrptns_1),
+          color = aes(fill = dscrptns_1),#NA,
           size = 0.4, show.legend = FALSE) +
   geom_sf() +  #+
   geom_point( data= data,
-              aes(color =  dscvrs_m_1,  #fill = bi_class,
+              aes(color =  dscrptns_1,  #fill = bi_class,
                   geometry = geometry),
               size = 2,
               stat = "sf_coordinates"
@@ -200,6 +200,119 @@ map <- ggplot() +
 map
 
 
+legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill = dscrptns_1),
+                                                color = aes(fill = dscvrs_m_1),#NA,
+                                                size = 0.4, show.legend = TRUE) +
+                                geom_sf() +  #+
+                                geom_point( data= data,
+                                            aes(color =  dscrptns_1,  #fill = bi_class,
+                                                geometry = geometry),
+                                            size = 2,
+                                            stat = "sf_coordinates"
+                                ) +
+                                scale_fill_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+                                scale_color_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+                                # scale_fill_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+                                # scale_color_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+                                guides(color = "none",
+                                       fill=guide_legend(title="Peak geolocation year"),override.aes = list(size = 0.5)) +
+                                bi_theme() +
+                                geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
+                                                         |(long %in% c(-180,180) & lat %in% c(-90,90)
+                                                           & region == "EW")],
+                                          aes(x = X, y = Y, group = group),
+                                          linetype = "solid", colour = "black", size = .3) +
+                                theme(axis.title.y=element_blank(),
+                                      axis.title.x=element_blank(),
+                                      axis.text.y=element_blank(),
+                                      axis.text.x=element_blank(),
+                                      panel.border = element_blank(),
+                                      panel.grid.minor = element_blank(),
+                                      panel.grid.major = element_blank(),
+                                      legend.text=element_text(size=8),
+                                      legend.title=element_text(size=10)
+                                )
+)
+
+
+
+
+# combine map with legend
+finalPlot <- ggdraw() +
+  draw_plot(map, 0, 0, 1, 1) +
+  draw_plot(legend, 0.8, .7, 0.24, 0.24)
+
+
+finalPlot
+
+ggsave(paste0(basepath, "skyline_wallacean_map.pdf"), width = 30, height = 12, units = "cm")
+
+
+#
+
+
+##########################################################
+# dpeak discovery year
+#######################################
+
+#
+# dim=4
+# col.matrix<-colmat(nquantiles=dim,
+#                    upperleft=rgb(0,150,235, maxColorValue=255),
+#                    upperright= rgb(255,230,15, maxColorValue=255),
+#                    bottomleft="black",#"grey",
+#                    bottomright=rgb(130,0,80, maxColorValue=255)
+# )
+# custom_pal4 <- as.vector(rotate(rotate(col.matrix[2:(dim+1),2:(dim+1)])))
+# names(custom_pal4)= do.call(paste0, expand.grid(1:(dim), sep="-",1:(dim)))
+
+# data <- bi_class(darkspots.prj,y=drk, x=discoveri5,
+#                  style = "fisher", dim = dim)
+#
+
+data = darkspots.prj
+
+
+# create map
+map <- ggplot() +
+  geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
+          color = aes(fill = dscvrs_m_1),#NA,
+          size = 0.4, show.legend = FALSE) +
+  geom_sf() +  #+
+  geom_point( data= data,
+              aes(color =  dscvrs_m_1,  #fill = bi_class,
+                  geometry = geometry),
+              size = 2,
+              stat = "sf_coordinates"
+  ) +
+  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+  scale_color_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+  # scale_fill_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
+  # scale_color_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
+  guides(color = "none") +
+  bi_theme() +
+  geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
+                           |(long %in% c(-180,180) & lat %in% c(-90,90)
+                             & region == "EW")],
+            aes(x = X, y = Y, group = group),
+            linetype = "solid", colour = "black", size = .3) +
+  theme(axis.title.y=element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.text.x=element_blank(),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        legend.text=element_text(size=8),
+        legend.title=element_text(size=10)
+  )
+# theme(axis.title.y=element_blank(),
+#       axis.title.x=element_blank(),
+#       axis.text.y=element_blank(),
+#       axis.text.x=element_blank())
+map
+
+
 legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill = dscvrs_m_1),
                                                 color = aes(fill = dscvrs_m_1),#NA,
                                                 size = 0.4, show.legend = TRUE) +
@@ -215,7 +328,7 @@ legend <- cowplot::get_legend(ggplot() +geom_sf(data = data, mapping = aes(fill 
                                 # scale_fill_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
                                 # scale_color_gradient2(high = "darkgoldenrod", mid = "grey", low ="chocolate4", midpoint =1900)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
                                 guides(color = "none",
-                                       fill=guide_legend(title="Peak discovery year"),override.aes = list(size = 0.5)) +
+                                       fill=guide_legend(title="Peak description year"),override.aes = list(size = 0.5)) +
                                 bi_theme() +
                                 geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
                                                          |(long %in% c(-180,180) & lat %in% c(-90,90)
