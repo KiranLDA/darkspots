@@ -464,8 +464,6 @@ for (scenario in 1:9){
                 paste0("randomised_rank_table_",scenario,"_S_sc")),
        file = paste0(basepath, "randomisation_outputs_",scenario,"_S_sc.RData"))
 
-
-
 }
 
 
@@ -560,12 +558,14 @@ for (scenario in 1:9){
 
 
 #######################################################################################
-#
 
+
+print("Spearman rank correlations")
 for (scenario in 1:9){
   print(summary(get(paste0("spearman_",scenario,"_S"))))
 }
 
+print("Scaled spearman rank correlations")
 for (scenario in 1:9){
   print(summary(get(paste0("spearman_",scenario,"_S_sc"))))
 }

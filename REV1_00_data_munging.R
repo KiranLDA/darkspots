@@ -125,6 +125,8 @@ tdwg3 =  tdwg3 %>%
 # colnames(shortfalls_rescaled)[1] = "LEVEL3_COD"
 
 shortfalls_raw <- read.csv("C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/REV_shortfalls_not_rescaled_predictions_with_uncertainty_bounds.csv")
+shortfalls_raw <- read.csv("C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/old_REV_shortfalls_not_rescaled_predictions_with_uncertainty_bounds.csv")
+
 
 outliers= c("NWG","BOR","ECU", "BOL","BZN","PAN")
 # shortfalls_raw[which(shortfalls_raw$LEVEL3_COD %in% outliers),"SR_unknown_UL"] = 20000
