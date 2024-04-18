@@ -8,7 +8,7 @@ library(dplyr)
 sf_use_s2(FALSE)
 
 # basepath = "C:/Users/kdh10kg/Documents/github/darkspots_shiny/prep/"
-basepath = "C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/REVISION_1/"
+basepath = "C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/REVISION_1/revision_version/"
 load( file = paste0(basepath, "REV_app_data.RData"))
 
 ##############################################################################
@@ -21,7 +21,7 @@ library(classInt)
 
 rotate <- function(x) t(apply(x, 2, rev))
 
-
+normalise <- function(x){(x - min(x,na.rm=T))/ ((max(x,na.rm=T) - min(x,na.rm=T)) + 0.01)}
 
 colmat<-function(nquantiles=4, upperleft=rgb(0,150,235, maxColorValue=255),
                  upperright=rgb(130,0,80, maxColorValue=255),
@@ -74,7 +74,7 @@ darkspots <- tdwg3
 
 ####  PROJECT A in ECKERT IV
 
-PROJ <- "+proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+PROJ <- "+proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"#"+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" #
 
 sf_use_s2(FALSE)
 m = st_buffer(darkspots, 0)
@@ -143,17 +143,19 @@ data = darkspots.prj
 
 # create map
 map <- ggplot() +
-  geom_sf(data = data, mapping = aes(fill = discoveries_max_year),
-          color = aes(fill = discoveries_max_year),#NA,
-          size = 0.4, show.legend = FALSE) +
-  geom_sf() +  #+
   geom_point( data= data,
               aes(color =  discoveries_max_year,  #fill = bi_class,
                   geometry = geometry),
               size = 2,
               stat = "sf_coordinates"
   ) +
-  scale_fill_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
+  geom_sf(data = data,
+          mapping = aes(fill = discoveries_max_year),
+          color = aes(fill = discoveries_max_year),#NA, # #without lines
+          size = 0.04, show.legend = FALSE) +
+  # geom_sf() +  #+
+
+    scale_fill_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
   scale_color_gradientn(colours=RColorBrewer::brewer.pal(10, "BrBG"))+
   guides(color = "none") +
   bi_theme() +
@@ -513,19 +515,19 @@ data <- bi_class(darkspots.prj,y=linnean, x=wallacean,
 
 # create map
 map <- ggplot() +
-  geom_sf(data = data, mapping = aes(fill = bi_class),
-          color = aes(fill = bi_class ),#NA,
-          size = 0.4, show.legend = FALSE) +
-  geom_sf() +  #+
   geom_point( data= data,
               aes(color =  bi_class, #fill = bi_class,
                   geometry = geometry),
               size = 2,
-              stat = "sf_coordinates"
-  ) +
+              stat = "sf_coordinates" ) +
+  geom_sf(data = data, mapping = aes(fill = bi_class),
+          color = "black",#aes(fill = bi_class ),#NA,
+          size = 0.8, show.legend = FALSE) +
   scale_alpha_continuous(range = c(0.1, 1)) +
-  bi_scale_fill(pal = custom_pal4, dim=dim)+#, flip_axes = TRUE, rotate_pal = TRUE) + #"GrPink", dim = 3) +#, rotate_pal = TRUE) +
-  bi_scale_color(pal = custom_pal4, dim=dim)+#,flip_axes = TRUE, rotate_pal = TRUE) +
+  bi_scale_fill(pal = custom_pal4, dim=dim,
+                na.value="#e8e8e8")+#, flip_axes = TRUE, rotate_pal = TRUE) + #"GrPink", dim = 3) +#, rotate_pal = TRUE) +
+  bi_scale_color(pal = custom_pal4, dim=dim,
+                 na.value="#e8e8e8")+#,flip_axes = TRUE, rotate_pal = TRUE) +
   guides(color = "none") +
   bi_theme() +
   geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
@@ -546,6 +548,43 @@ map <- ggplot() +
 
 map
 
+
+
+# # create map
+# map <- ggplot() +
+#   geom_point( data= data,
+#               aes(color =  bi_class, #fill = bi_class,
+#                   geometry = geometry),
+#               size = 2,
+#               stat = "sf_coordinates" ) +
+#   geom_sf(data = data, mapping = aes(fill = bi_class),
+#           color = aes(fill = bi_class ),#NA,"black",#
+#           size = 0.8, show.legend = FALSE) +
+#   scale_alpha_continuous(range = c(0.1, 1)) +
+#   bi_scale_fill(pal = custom_pal4, dim=dim,
+#                 na.value="#e8e8e8")+#, flip_axes = TRUE, rotate_pal = TRUE) + #"GrPink", dim = 3) +#, rotate_pal = TRUE) +
+#   bi_scale_color(pal = custom_pal4, dim=dim,
+#                  na.value="#e8e8e8")+#,flip_axes = TRUE, rotate_pal = TRUE) +
+#   guides(color = "none") +
+#   bi_theme() +
+#   # geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
+#   #                          |(long %in% c(-180,180) & lat %in% c(-90,90)
+#   #                            & region == "EW")],
+#   #           aes(x = X, y = Y, group = group),
+#   #           linetype = "solid", colour = "black", size = .3) +
+#   theme(axis.title.y=element_blank(),
+#         axis.title.x=element_blank(),
+#         axis.text.y=element_blank(),
+#         axis.text.x=element_blank(),
+#         panel.border = element_blank(),
+#         panel.grid.minor = element_blank(),
+#         panel.grid.major = element_blank(),
+#         legend.text=element_text(size=8),
+#         legend.title=element_text(size=10)
+#   )
+#
+# map
+# ggsave(paste0(basepath, "noborder_nolines_darkspot_map.pdf"), width = 30, height = 12, units = "cm")
 
 legend <- bi_legend(pal = custom_pal4,#"GrPink",
                     dim = dim,
@@ -657,7 +696,8 @@ p
 # ggsave(paste0(basepath, "time2event_darkspot_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
-ggarrange(finalPlot,
+ggarrange(ggdraw() +
+            draw_plot(map, 0, 0, 1, 1),#finalPlot,
           p , labels = c("a.", "b."),
           font.label = list(size = 30),
           ncol = 2, nrow = 1, widths = c(1, 0.5))
@@ -799,18 +839,18 @@ data <- bi_class(darkspots.prj,y=linnean_sc, x=wallacean_sc,
 
 # create map
 map <- ggplot() +
-  geom_sf(data = data, mapping = aes(fill = bi_class),
-          color = aes(fill = bi_class),#NA,
-          size = 0.4, show.legend = FALSE) +
-  geom_sf() +  #+
   geom_point( data= data,
               aes(color =  bi_class,  #fill = bi_class,
                   geometry = geometry),
               size = 2,
-              stat = "sf_coordinates"
-  ) +
-  bi_scale_fill(pal = custom_pal4, dim=dim)+#, flip_axes = TRUE, rotate_pal = TRUE) + #"GrPink", dim = 3) +#, rotate_pal = TRUE) +
-  bi_scale_color(pal = custom_pal4, dim=dim)+#,flip_axes = TRUE, rotate_pal = TRUE) +
+              stat = "sf_coordinates" ) +
+  geom_sf(data = data, mapping = aes(fill = bi_class),
+          color = "black",#aes(fill = bi_class),#NA,
+          size = 0.8, show.legend = FALSE) +
+  bi_scale_fill(pal = custom_pal4, dim=dim,
+                na.value="#e8e8e8")+#, flip_axes = TRUE, rotate_pal = TRUE) + #"GrPink", dim = 3) +#, rotate_pal = TRUE) +
+  bi_scale_color(pal = custom_pal4, dim=dim,
+                 na.value="#e8e8e8")+#,flip_axes = TRUE, rotate_pal = TRUE) +
   guides(color = "none") +
   bi_theme() +
   geom_path(data = grid.DT[(long %in% c(-180,180) & region == "NS")
@@ -935,7 +975,8 @@ p
 # ggsave(paste0(basepath, "time2event_darkspot_roseplot.pdf"), width = 15, height = 15, units = "cm")
 
 
-ggarrange(finalPlot,
+ggarrange(ggdraw() +
+            draw_plot(map, 0, 0, 1, 1),#finalPlot,
           p , labels = c("a.", "b."),
           font.label = list(size = 30),
           ncol = 2, nrow = 1, widths = c(1, 0.5))

@@ -4,28 +4,34 @@ library(ggfortify)
 library(tidyverse)
 library(tidymodels) # for the fit() function
 library(plotly)
-
+library(sf)
 # basepath = "C:/Users/kdh10kg/Documents/github/darkspots_shiny/prep/"
 basepath = "C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/"
-load(paste0("C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/REVISION_1/REV_app_data.RData"))
+# load(paste0("C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/REVISION_1/REV_app_data.RData"))
+load(paste0("C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/REVISION_1/revision_version/REV_app_data.RData"))
+
+normalise <- function(x){(x - min(x,na.rm=T))/ ((max(x,na.rm=T) - min(x,na.rm=T)) + 0.01)}
 
 
+# # Add descriptions and discoveries from Daniele
+# discoveries = read.csv(paste0(basepath,"skyline_model/v5/Species_sampling_rates_all.csv"))#Discovery_rates.csv"))
+# descriptions = read.csv(paste0(basepath,"skyline_model/v5/Species_description_rates_all.csv"))#Description_rates.csv"))
+# left_to_sample = read.csv(paste0(basepath,"skyline_model/v5/Species_to_be_sampled_all.csv"))
+#
+# #complement the new with the old
+# discoveries_old = read.csv(paste0(basepath,"skyline_model/v4/Species_sampling_rates_all.csv"))#Discovery_rates.csv"))
+# descriptions_old = read.csv(paste0(basepath,"skyline_model/v4/Species_description_rates_all.csv"))#Description_rates.csv"))
+# left_to_sample_old = read.csv(paste0(basepath,"skyline_model/v4/Species_to_be_sampled_all.csv"))
+#
+#
+# discoveries = rbind(discoveries, discoveries_old[!(discoveries_old$X %in% discoveries$X),])
+# descriptions = rbind(descriptions, descriptions_old[!(descriptions_old$X %in% descriptions$X),])
+# left_to_sample = rbind(left_to_sample, left_to_sample_old[!(left_to_sample_old$X %in% left_to_sample$X),])
 
-# Add descriptions and discoveries from Daniele
-discoveries = read.csv(paste0(basepath,"skyline_model/v5/Species_sampling_rates_all.csv"))#Discovery_rates.csv"))
-descriptions = read.csv(paste0(basepath,"skyline_model/v5/Species_description_rates_all.csv"))#Description_rates.csv"))
-left_to_sample = read.csv(paste0(basepath,"skyline_model/v5/Species_to_be_sampled_all.csv"))
 
-#complement the new with the old
-discoveries_old = read.csv(paste0(basepath,"skyline_model/v4/Species_sampling_rates_all.csv"))#Discovery_rates.csv"))
-descriptions_old = read.csv(paste0(basepath,"skyline_model/v4/Species_description_rates_all.csv"))#Description_rates.csv"))
-left_to_sample_old = read.csv(paste0(basepath,"skyline_model/v4/Species_to_be_sampled_all.csv"))
-
-
-discoveries = rbind(discoveries, discoveries_old[!(discoveries_old$X %in% discoveries$X),])
-descriptions = rbind(descriptions, descriptions_old[!(descriptions_old$X %in% descriptions$X),])
-left_to_sample = rbind(left_to_sample, left_to_sample_old[!(left_to_sample_old$X %in% left_to_sample$X),])
-
+discoveries = read.csv(paste0(basepath,"skyline_model/v6/Species_sampling_rates_all.csv"))#Discovery_rates.csv"))
+descriptions = read.csv(paste0(basepath,"skyline_model/v6/Species_description_rates_all.csv"))#Description_rates.csv"))
+left_to_sample = read.csv(paste0(basepath,"skyline_model/v6/Species_to_be_sampled_all.csv"))
 
 window = 30
 
@@ -328,12 +334,18 @@ ggsave(paste0(basepath, "REVISION_1/FigS1_PCA_income.png"),
 #   Linnean "SR_unknown"
 #----------------------------------------------------------------------------
 # normalise(tdwg3$SR_unknown) = scale(tdwg3$SR_unknown, center=F)
-tdwg3$SR_unknown_norm_yearly_log = log2(normalise(tdwg3$SR_unknown)/28)
+tdwg3$SR_unknown_norm_yearly_log = log2((normalise(tdwg3$SR_unknown))/28)
 tdwg3$discoveries_y2010_log = log2(tdwg3$discoveries_y2010)
+
+st_drop_geometry(tdwg3)[rows,c("LEVEL3_NAM", "SR_unknown_norm_yearly_log")]
+rowsz = which(st_drop_geometry(tdwg3)[, "SR_unknown_norm_yearly_log"] <= -13)
+st_drop_geometry(tdwg3)[which(rows)[rowsz],c("LEVEL3_NAM", "SR_unknown_norm","SR_unknown_norm_yearly_log")]
+rows[rowsz] = FALSE
 
 
 a <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log", y = "discoveries_y2010_log",
           add = "reg.line", conf.int = FALSE,
+          xlim = c(-14,-4),
           # yscale = "log2",
           # xscale = "log2",
           cor.coef = FALSE, cor.method = "kendall", #cor.coef.name="tau",# rr.label="tau",
@@ -341,11 +353,12 @@ a <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log",
           ylab = "Description rate across 2010s (log)", main="a.") +#(a) Linnean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -20
+    label.x = -13.5,
+    label.y = -3
   )
 a
-ggsave(paste0(basepath, "REVISION_1/linnean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
-ggsave(paste0(basepath, "REVISION_1/linnean_model_comparison.png"), width = 10, height = 10, units = "cm", bg="white")
+ggsave(paste0(basepath, "REVISION_1/revision_version/linnean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
+ggsave(paste0(basepath, "REVISION_1/revision_version/linnean_model_comparison.png"), width = 10, height = 10, units = "cm", bg="white")
 
 
 
@@ -369,12 +382,12 @@ b<-ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_nogeoloc_norm_yearly_log", 
     label.x = -16
   )
 b
-ggsave(paste0(basepath, "REVISION_1/wallacean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
-ggsave(paste0(basepath, "REVISION_1/wallacean_model_comparison.png"), width = 10, height = 10, units = "cm", bg="white")
+ggsave(paste0(basepath, "REVISION_1/revision_version/wallacean_model_comparison.pdf"), width = 10, height = 10, units = "cm")
+ggsave(paste0(basepath, "REVISION_1/revision_version/wallacean_model_comparison.png"), width = 10, height = 10, units = "cm", bg="white")
 
 ggarrange(a,b, ncol = 2, nrow = 1)
-ggsave(paste0(basepath, "REVISION_1/linnean_wallacean_model_comparison.pdf"), width = 20, height = 10, units = "cm")
-ggsave(paste0(basepath, "REVISION_1/linnean_wallacean_model_comparison.png"), width = 20, height = 10, units = "cm", bg="white")
+ggsave(paste0(basepath, "REVISION_1/revision_version/linnean_wallacean_model_comparison.pdf"), width = 20, height = 10, units = "cm")
+ggsave(paste0(basepath, "REVISION_1/revision_version/linnean_wallacean_model_comparison.png"), width = 20, height = 10, units = "cm", bg="white")
 
 
 ################################################################
@@ -387,6 +400,9 @@ ggsave(paste0(basepath, "REVISION_1/linnean_wallacean_model_comparison.png"), wi
 #----------------------------------------------------------------------------
 # normalise(tdwg3$SR_unknown) = scale(tdwg3$SR_unknown, center=F)
 tdwg3$SR_unknown_norm_yearly_log = log2(normalise(tdwg3$SR_unknown)/28)
+
+
+
 
 #2010
 
@@ -402,7 +418,8 @@ c <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log",
           ylab = "Description rate across 2010s (log)", main="c.") +#(a) Linnean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -20
+    label.x = -13,
+    label.y = -3
   )
 
 
@@ -420,7 +437,8 @@ b <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log",
                ylab = "Description rate across 1980s (log)", main="b.") +#(a) Linnean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -20
+    label.x = -13,
+    label.y = -3
   )
 
 
@@ -438,7 +456,8 @@ a <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log",
                ylab = "Description rate across 1950s (log)", main="a.") +#(a) Linnean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -20
+    label.x = -13#,
+    # label.y = -3
   )
 
 
@@ -505,9 +524,9 @@ d <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_nogeoloc_norm_yearly_log"
 ggarrange(a,b,c,
           d,e,f, ncol = 3, nrow = 2)
 
-ggsave(paste0(basepath, "REVISION_1/sky_tine2event_comparison_50_80_10.pdf"),
+ggsave(paste0(basepath, "REVISION_1/revision_version/sky_tine2event_comparison_50_80_10.pdf"),
        width = 30, height = 20, units = "cm")
-ggsave(paste0(basepath, "REVISION_1/sky_tine2event_comparison_50_80_10.png"),
+ggsave(paste0(basepath, "REVISION_1/revision_version/sky_tine2event_comparison_50_80_10.png"),
        width = 30, height = 20, units = "cm", bg="white")
 
 #####################################################################################
@@ -545,6 +564,10 @@ tdwg3$discoveries_y2010_log_sc[complete_rows] = log2(SAR(tdwg3$discoveries_y2010
                                        areas$land_area[complete_rows]))
 
 
+st_drop_geometry(tdwg3)[rows,c("LEVEL3_NAM", "SR_unknown_norm_yearly_log_sc")]
+rowsz = which(st_drop_geometry(tdwg3)[, "SR_unknown_norm_yearly_log_sc"] <= -13)
+st_drop_geometry(tdwg3)[rowsz,c("LEVEL3_NAM", "SR_unknown_norm","SR_unknown_norm_yearly_log_sc")]
+rows[rowsz] = FALSE
 
 a <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log_sc", y = "discoveries_y2010_log_sc",
           add = "reg.line", conf.int = FALSE,
@@ -555,12 +578,12 @@ a <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log_s
           ylab = "Description rate across 2010s (log)", main="a.") +#(a) Linnean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -16
+    label.x = -9
   )
 a
 
-ggsave(paste0(basepath, "REVISION_1/linnean_model_comparison_sc.pdf"), width = 10, height = 10, units = "cm")
-ggsave(paste0(basepath, "REVISION_1/linnean_model_comparison_sc.png"), width = 10, height = 10, units = "cm", bg="white")
+ggsave(paste0(basepath, "REVISION_1/revision_version/linnean_model_comparison_sc.pdf"), width = 10, height = 10, units = "cm")
+ggsave(paste0(basepath, "REVISION_1/revision_version/linnean_model_comparison_sc.png"), width = 10, height = 10, units = "cm", bg="white")
 
 
 
@@ -576,6 +599,12 @@ tdwg3$descriptions_y2010_log_sc = tdwg3$descriptions_y2010
 tdwg3$descriptions_y2010_log_sc[complete_rows] = log2(SAR(tdwg3$descriptions_y2010[complete_rows],
                                                          areas$land_area[complete_rows]))
 
+st_drop_geometry(tdwg3)[rows,c("LEVEL3_NAM", "SR_nogeoloc_norm_yearly_log_sc")]
+rowsz = which(st_drop_geometry(tdwg3)[, "SR_nogeoloc_norm_yearly_log_sc"] <= -13)
+st_drop_geometry(tdwg3)[rowsz,c("LEVEL3_NAM", "SR_unknown_norm","SR_nogeoloc_norm_yearly_log_sc")]
+rows[rowsz] = FALSE
+
+
 b <-ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_nogeoloc_norm_yearly_log_sc", y = "descriptions_y2010_log_sc",
           add = "reg.line", conf.int = FALSE,
           # yscale = "log2",
@@ -585,15 +614,15 @@ b <-ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_nogeoloc_norm_yearly_log_s
           ylab = "Geolocation rate across 2010s (log)", main="b.") +  # Wallacean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -16
+    label.x = -10
   )
 b
-ggsave(paste0(basepath, "REVISION_1/wallacean_model_comparison_sc.pdf"), width = 10, height = 10, units = "cm")
-ggsave(paste0(basepath, "REVISION_1/wallacean_model_comparison_sc.png"), width = 10, height = 10, units = "cm",bg="white")
+ggsave(paste0(basepath, "REVISION_1/revision_version/wallacean_model_comparison_sc.pdf"), width = 10, height = 10, units = "cm")
+ggsave(paste0(basepath, "REVISION_1/revision_version/wallacean_model_comparison_sc.png"), width = 10, height = 10, units = "cm",bg="white")
 
 ggarrange(a,b, ncol = 2, nrow = 1)
-ggsave(paste0(basepath, "REVISION_1/linnean_wallacean_model_comparison_sc.pdf"), width = 20, height = 10, units = "cm")
-ggsave(paste0(basepath, "REVISION_1/linnean_wallacean_model_comparison_sc.png"), width = 20, height = 10, units = "cm", bg="white")
+ggsave(paste0(basepath, "REVISION_1/revision_version/linnean_wallacean_model_comparison_sc.pdf"), width = 20, height = 10, units = "cm")
+ggsave(paste0(basepath, "REVISION_1/revision_version/linnean_wallacean_model_comparison_sc.png"), width = 20, height = 10, units = "cm", bg="white")
 
 
 ################################################################
@@ -625,7 +654,8 @@ c <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log_s
                ylab = "Description rate across 2010s (log)", main="c.") +#(a) Linnean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -25
+    label.x = -9#,
+    # label.y = -3
   )
 
 
@@ -647,7 +677,8 @@ b <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log_s
                ylab = "Description rate across 1980s (log)", main="b.") +#(a) Linnean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -25
+    label.x = -9#,
+    # label.y = -3
   )
 
 
@@ -668,7 +699,8 @@ a <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_unknown_norm_yearly_log_s
                ylab = "Description rate across 1950s (log)", main="a.") +#(a) Linnean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -25
+    label.x = -9#,
+    # label.y = -3
   )
 
 
@@ -695,7 +727,7 @@ f <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_nogeoloc_norm_yearly_log_
                ylab = "Geolocation rate across 2010s (log)", main="f.") +  # Wallacean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -25
+    label.x = -10
   )
 
 
@@ -717,7 +749,7 @@ e <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_nogeoloc_norm_yearly_log_
                ylab = "Geolocation rate across 1980s (log)", main="e.") +  # Wallacean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -25
+    label.x = -10
   )
 
 #1950
@@ -737,18 +769,18 @@ d <- ggscatter(st_drop_geometry(tdwg3)[rows,], x = "SR_nogeoloc_norm_yearly_log_
                ylab = "Geolocation rate across 1950s (log)", main="d.") +  # Wallacean shortfall")
   stat_cor(
     aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")),cor.coef.name = "tau",
-    label.x = -25
+    label.x = -10
   )
 
 
 ggarrange(a,b,c,
           d,e,f, ncol = 3, nrow = 2)
 
-ggsave(paste0(basepath, "REVISION_1/sky_tine2event_comparison_50_80_10_sc.pdf"),
+ggsave(paste0(basepath, "REVISION_1/revision_version/sky_tine2event_comparison_50_80_10_sc.pdf"),
        width = 30, height = 20, units = "cm")
-ggsave(paste0(basepath, "REVISION_1/sky_tine2event_comparison_50_80_10_sc.png"),
+ggsave(paste0(basepath, "REVISION_1/revision_version/sky_tine2event_comparison_50_80_10_sc.png"),
        width = 30, height = 20, units = "cm", bg="white")
 
 
-save(tdwg3, file = paste0("C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/REVISION_1/REV_app_data.RData"))
+save(tdwg3, file = paste0("C:/Users/kdh10kg/OneDrive - The Royal Botanic Gardens, Kew/darkspots/prep/REVISION_1/revision_version/REV_app_data.RData"))
 
