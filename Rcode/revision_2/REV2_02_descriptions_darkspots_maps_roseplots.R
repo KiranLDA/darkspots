@@ -565,8 +565,28 @@ finalPlot
 # ggsave(paste0(basepath, "time2event_darkspot_map.png"), bg="white", width = 30, height = 12, units = "cm")
 
 
+##################################################
+# scatterplot
 
+scatter <- ggplot() +
+  geom_point( data= data,
+              aes(x =  wallacean, y = linnean,
+                  color =  bi_class),
+              size = 2
+  ) +
+  bi_scale_color(pal = custom_pal4, dim=dim)+
+  guides(color = "none") +
+  theme_bw(title = "Fisher transformation for bivariate colour scale")
+
+scatter
+ggsave(paste0(path, "time2event_darkspot_scatter.pdf"), width = 12, height = 12, units = "cm")
+ggsave(paste0(path, "time2event_darkspot_scatter.png"), bg="white", width = 12, height = 12, units = "cm")
+
+
+
+##################################################
 # Windplot color darkspot/hotspot
+
 bi_label <- bi_class(darkspots.prj,y=linnean, x=wallacean,
                      style = "fisher", dim = dim)
 
@@ -773,7 +793,6 @@ finalPlot <- ggdraw() +
 
 finalPlot
 
-
 ggsave(paste0(path, "time2event_darkspot_uncertainty_map.pdf"), width = 30, height = 12, units = "cm")
 ggsave(paste0(path, "time2event_darkspot_uncertainty_map.png"), bg="white", width = 30, height = 12, units = "cm")
 
@@ -873,6 +892,22 @@ finalPlot
 # ggsave(paste0(basepath, "time2event_darkspot_map_sc.png"), bg="white", width = 30, height = 12, units = "cm")
 
 
+##################################################
+# scatterplot
+
+scatter <- ggplot() +
+  geom_point( data= data,
+              aes(x =  wallacean_sc, y = linnean_sc,
+                  color =  bi_class),
+              size = 2
+  ) +
+  bi_scale_color(pal = custom_pal4, dim=dim)+
+  guides(color = "none") +
+  theme_bw()
+
+scatter
+ggsave(paste0(path, "time2event_darkspot_scatter_sc.pdf"), width = 12, height = 12, units = "cm")
+ggsave(paste0(path, "time2event_darkspot_scatter_sc.png"), bg="white", width = 12, height = 12, units = "cm")
 
 
 
@@ -998,15 +1033,15 @@ map <- ggplot() +
               stat = "sf_coordinates"
   ) +
   scale_fill_gradientn(colours=(RColorBrewer::brewer.pal(7, "Greys")),
-                       limits = c(0,3),
-                       breaks = c(0,1,2,3),
+                       limits = c(0,1),
+                       breaks = c(0,0.2,0.4,0.6,0.8,1),
                        na.value = "black",
-                       labels = c("0","1","2",">3"))+#[4:7]))+
+                       labels = c("0","0.2","0.4","0.6","0.8",">1"))+#[4:7]))+
   scale_color_gradientn(colours=(RColorBrewer::brewer.pal(7, "Greys")),
-                        limits = c(0,3),
-                        breaks = c(0,1,2,3),
+                        limits = c(0,1),
+                        breaks = c(0,0.2,0.4,0.6,0.8,1),
                         na.value = "black",
-                        labels = c("0","1","2",">3"))+#[4:7]))+
+                        labels = c("0","0.2","0.4","0.6","0.8",">1"))+#[4:7]))+
 
   # scale_fill_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
   # scale_color_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
@@ -1047,15 +1082,15 @@ legend <- cowplot::get_legend(ggplot() +
                                             stat = "sf_coordinates"
                                 ) +
                                 scale_fill_gradientn(colours=(RColorBrewer::brewer.pal(7, "Greys")),
-                                                     limits = c(0,3),
-                                                     breaks = c(0,1,2,3),
+                                                     limits = c(0,1),
+                                                     breaks = c(0,0.2,0.4,0.6,0.8,1),
                                                      na.value = "black",
-                                                     labels = c("0","1","2",">3"))+#[4:7]))+
+                                                     labels = c("0","0.2","0.4","0.6","0.8",">1"))+#[4:7]))+
                                 scale_color_gradientn(colours=(RColorBrewer::brewer.pal(7, "Greys")),
-                                                      limits = c(0,3),
-                                                      breaks = c(0,1,2,3),
+                                                      limits = c(0,1),
+                                                      breaks = c(0,0.2,0.4,0.6,0.8,1),
                                                       na.value = "black",
-                                                      labels = c("0","1","2",">3"))+#[4:7]))+
+                                                      labels = c("0","0.2","0.4","0.6","0.8",">1"))+#[4:7]))+
                                 # scale_fill_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#mid = "yellow", #use 2 for 3 scale , midpoint = 150
                                 # scale_color_gradient2(high = "#003333", mid = "brown", low ="#FF9999", midpoint =1920)+#, midpoint = .02 #mid = "yellow", , midpoint = 150
                                 guides(color = "none",
